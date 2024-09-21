@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="一、SFT数据构造&#x2F;训练经验1.基础要求（1）基础原则SFT数据通常为(Query, Response)的语料，主要是用于训练，通过高质量的有监督语料，来激发预训练模型的能力。 确保数据的典型性，SFT数据用于将用户指令对齐到模型已存在的能力上，不典型的数据可能导致错误的对齐行为。  保证用户Query的意图明确清晰、数据质量优； 保证用户指令有效，且Query与Response要对齐。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="大模型微调数据处理经验">
+<meta property="og:url" content="http://example.com/2024/06/12/DataProcessEP/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="一、SFT数据构造&#x2F;训练经验1.基础要求（1）基础原则SFT数据通常为(Query, Response)的语料，主要是用于训练，通过高质量的有监督语料，来激发预训练模型的能力。 确保数据的典型性，SFT数据用于将用户指令对齐到模型已存在的能力上，不典型的数据可能导致错误的对齐行为。  保证用户Query的意图明确清晰、数据质量优； 保证用户指令有效，且Query与Response要对齐。">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-06-12T06:59:51.000Z">
+<meta property="article:modified_time" content="2024-09-19T07:19:03.952Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="大模型">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>大模型微调数据处理经验</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/probberechts">Projects</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2023/12/28/LlmIllusion/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2024/06/12/DataProcessEP/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2024/06/12/DataProcessEP/&text=大模型微调数据处理经验"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2024/06/12/DataProcessEP/&title=大模型微调数据处理经验"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2024/06/12/DataProcessEP/&is_video=false&description=大模型微调数据处理经验"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=大模型微调数据处理经验&body=Check out this article: http://example.com/2024/06/12/DataProcessEP/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2024/06/12/DataProcessEP/&title=大模型微调数据处理经验"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2024/06/12/DataProcessEP/&title=大模型微调数据处理经验"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2024/06/12/DataProcessEP/&title=大模型微调数据处理经验"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2024/06/12/DataProcessEP/&title=大模型微调数据处理经验"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2024/06/12/DataProcessEP/&name=大模型微调数据处理经验&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2024/06/12/DataProcessEP/&t=大模型微调数据处理经验"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81SFT%E6%95%B0%E6%8D%AE%E6%9E%84%E9%80%A0-%E8%AE%AD%E7%BB%83%E7%BB%8F%E9%AA%8C"><span class="toc-number">1.</span> <span class="toc-text">一、SFT数据构造&#x2F;训练经验</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%9F%BA%E7%A1%80%E8%A6%81%E6%B1%82"><span class="toc-number">1.1.</span> <span class="toc-text">1.基础要求</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%EF%BC%881%EF%BC%89%E5%9F%BA%E7%A1%80%E5%8E%9F%E5%88%99"><span class="toc-number">1.1.1.</span> <span class="toc-text">（1）基础原则</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%EF%BC%882%EF%BC%89%E6%A0%BC%E5%BC%8F%E8%A6%81%E6%B1%82"><span class="toc-number">1.1.2.</span> <span class="toc-text">（2）格式要求</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%EF%BC%883%EF%BC%89%E5%86%85%E5%AE%B9%E8%A6%81%E6%B1%82"><span class="toc-number">1.1.3.</span> <span class="toc-text">（3）内容要求</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E6%9E%84%E9%80%A0%E7%BB%8F%E9%AA%8C"><span class="toc-number">1.2.</span> <span class="toc-text">2.构造经验</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%EF%BC%881%EF%BC%89%E6%8A%93%E5%8F%96-%E6%A0%87%E6%B3%A8%E6%95%B0%E6%8D%AE%E6%97%B6%E7%9A%84%E7%9B%AE%E6%A0%87%EF%BC%9A"><span class="toc-number">1.2.1.</span> <span class="toc-text">（1）抓取&#x2F;标注数据时的目标：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%EF%BC%882%EF%BC%89%E6%8A%93%E5%8F%96-%E6%A0%87%E6%B3%A8%E6%95%B0%E6%8D%AE%E6%97%B6%E7%9A%84%E6%89%8B%E6%AE%B5%EF%BC%9A"><span class="toc-number">1.2.2.</span> <span class="toc-text">（2）抓取&#x2F;标注数据时的手段：</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81DPO%E6%95%B0%E6%8D%AE%E6%9E%84%E9%80%A0%E7%BB%8F%E9%AA%8C"><span class="toc-number">2.</span> <span class="toc-text">二、DPO数据构造经验</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%9F%BA%E7%A1%80%E8%A6%81%E6%B1%82-1"><span class="toc-number">2.1.</span> <span class="toc-text">1.基础要求</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E6%9E%84%E9%80%A0%E7%BB%8F%E9%AA%8C-1"><span class="toc-number">2.2.</span> <span class="toc-text">2.构造经验</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E3%80%81KTO%E6%95%B0%E6%8D%AE%E6%9E%84%E9%80%A0%E7%BB%8F%E9%AA%8C"><span class="toc-number">3.</span> <span class="toc-text">三、KTO数据构造经验</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%9F%BA%E7%A1%80%E8%A6%81%E6%B1%82-2"><span class="toc-number">3.1.</span> <span class="toc-text">1.基础要求</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E6%9E%84%E9%80%A0%E7%BB%8F%E9%AA%8C-2"><span class="toc-number">3.2.</span> <span class="toc-text">2.构造经验</span></a></li></ol></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        大模型微调数据处理经验
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">John Doe</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2024-06-12T06:59:51.000Z" class="dt-published" itemprop="datePublished">2024-06-12</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%9B%B8%E5%85%B3/">大模型相关</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B/" rel="tag">大模型</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h1 id="一、SFT数据构造-训练经验"><a href="#一、SFT数据构造-训练经验" class="headerlink" title="一、SFT数据构造&#x2F;训练经验"></a>一、SFT数据构造&#x2F;训练经验</h1><h2 id="1-基础要求"><a href="#1-基础要求" class="headerlink" title="1.基础要求"></a>1.基础要求</h2><h3 id="（1）基础原则"><a href="#（1）基础原则" class="headerlink" title="（1）基础原则"></a>（1）基础原则</h3><p>SFT数据通常为(Query, Response)的语料，主要是用于训练，通过高质量的有监督语料，来激发预训练模型的能力。</p>
+<p>确保数据的典型性，SFT数据用于将用户指令对齐到模型已存在的能力上，不典型的数据可能导致错误的对齐行为。</p>
+<ol>
+<li>保证用户Query的意图明确清晰、数据质量优；</li>
+<li>保证用户指令有效，且Query与Response要对齐。利用更大的模型抓取数据后，可通过自动评估审查指令不遵循问题，并进行相应修改。删除没有遵循的指令或在response中增加对指令的响应；</li>
+<li>同类型任务不超过500条，如果模型依旧无法学会，需要仔细review数据或训练是否存在问题；</li>
+</ol>
+<p>因为模型能力源自预训练，只靠SFT数据无法让模型稳定学会新的能力，过多的同类型任务数据可能给模型带来不可预知的负面影响。</p>
+<h3 id="（2）格式要求"><a href="#（2）格式要求" class="headerlink" title="（2）格式要求"></a>（2）格式要求</h3><ol>
+<li><strong>输入输出格式一致：</strong>如果query中包含markdown格式，那么Response一定要是markdown格式 。如果输出有特别格式的说明，需要在prompt里面进行说明；</li>
+<li><strong>句子、段落结尾必须有标点：</strong>一个句子的结尾必须有标点符号，可以是句号、分号等，有序和无序列表也不例外；<strong>wc -l</strong></li>
+<li><strong>去掉数据中存在的空格</strong>：query和response中尽量不存在无意义的空格，特殊符号等（因为空格可能是不可见的unicode编码，但是模型会读取到编码格式）；</li>
+<li><strong>格式必须正确清晰、正确：</strong>输入、输出的格式清晰，正确使用分隔符、分段等。 同一个任务query的Response格式保持一致：格式尽量统一，比如，该换行的地方都有换行， 该标题的地方都有标题，空两行的地方全部空两行；</li>
+</ol>
+<h3 id="（3）内容要求"><a href="#（3）内容要求" class="headerlink" title="（3）内容要求"></a>（3）内容要求</h3><ol>
+<li><strong>确保数据中Response严格遵循指令、示例要求</strong>：保证指令中的每一条限定要求，在回复中均被满足了（「你可以」「建议你」此类模糊的修饰也需要满足）；</li>
+<li><strong>确保回复的事实准确性</strong>：确保回复中的每个客观事实均正确、无幻觉。可采用RAG方式将参考信息加入到输入。数据不仅要符合业务逻辑，也要符合普遍常识；</li>
+<li><strong>描述简明易懂</strong>：复杂任务描述语句可拆解为多个简单短句，便于描述和理解；</li>
+<li><strong>Response内容表述正确</strong>：无重复和冗余、语言表达正确、逻辑自洽、标点使用正确；</li>
+</ol>
+<p>尽量要求每一条数据的Response尽可能满足Prompt中的指令要求，比如提到了字数的要求，需要Response严格遵循字数边界。</p>
+<h2 id="2-构造经验"><a href="#2-构造经验" class="headerlink" title="2.构造经验"></a>2.构造经验</h2><h3 id="（1）抓取-标注数据时的目标："><a href="#（1）抓取-标注数据时的目标：" class="headerlink" title="（1）抓取&#x2F;标注数据时的目标："></a>（1）抓取&#x2F;标注数据时的目标：</h3><ol>
+<li><strong>保证内容丰富度：</strong>提升回复内容的全面性、丰富性、格式优美性等。</li>
+<li><strong>对回复特殊要求做明确说明：</strong>若SFT数据在相关任务上的回复模式与基模型的回复长度、语言风格、输出格式存在显著差异，需要在指令中增加相关的限定，比如字数限定等；</li>
+<li><strong>对回复字数限制的描述：</strong>最好使用边界指令，例如左右、大约、不超过、少于、至多，不使用大于指令和区间指令；</li>
+<li><strong>合理分布数据的比例，提升数据的覆盖面（尤其是边界情况）：</strong>确保数据的分布合理，比如正负例比例，不同的任务分支出现的比例，一个任务的训练数据，困难的样本和简单的样本都需要包含；</li>
+<li><strong>提升Prompt表达多样性有助于提升模型的泛化能力</strong>（成本较高，不好用）<strong>。</strong><ol>
+<li>换一种同义的指令表达方法。</li>
+<li>每条数据使用不同的示例。</li>
+<li>调整输出的格式、输出的字段顺序等。</li>
+</ol>
+</li>
+</ol>
+<h3 id="（2）抓取-标注数据时的手段："><a href="#（2）抓取-标注数据时的手段：" class="headerlink" title="（2）抓取&#x2F;标注数据时的手段："></a>（2）抓取&#x2F;标注数据时的手段：</h3><p>离线构造训练数据时，由于可以不考虑耗时等问题，</p>
+<ol>
+<li>采用能力更强的模型进行数据抓取，最好是选择同系列下更大的模型进行数据抓取；</li>
+<li>采用<strong>任务分解</strong>的手段进行数据抓取，例如将复杂任务，分为多阶段任务，降低任务难度，获得高质量response；</li>
+<li>设计尽可能具体、详细的prompt；</li>
+<li>设计好的<strong>自动评估方法</strong>，同样可进行评估纬度拆解，例如只评估事实性错误或者逻辑性错误，降低评估难度；或者整体的prompt遵循评估，进行数据筛选；</li>
+<li><strong>在训练时</strong>，除单独垂直任务的SFT数据之外，可混入一定量的<strong>通用任务数据</strong>，保证模型的<strong>通用能力不下降</strong>；</li>
+</ol>
+<h1 id="二、DPO数据构造经验"><a href="#二、DPO数据构造经验" class="headerlink" title="二、DPO数据构造经验"></a>二、DPO数据构造经验</h1><h2 id="1-基础要求-1"><a href="#1-基础要求-1" class="headerlink" title="1.基础要求"></a>1.基础要求</h2><p>同SFT数据构造的要求</p>
+<h2 id="2-构造经验-1"><a href="#2-构造经验-1" class="headerlink" title="2.构造经验"></a>2.构造经验</h2><ol>
+<li><strong>基础偏好数据获取：</strong><ol>
+<li>chosen和rejected的样本最好是产出于原模型（要进行DPO的模型），不使用其他的模型的输出进行DPO训练，原因：<a target="_blank" rel="noopener" href="https://arxiv.org/pdf/2404.10719%E3%80%82">https://arxiv.org/pdf/2404.10719。</a></li>
+<li>线上使用模型是一般为了降低幻觉并保证回答稳定性，temperture和topp控制在一个极小的值，在获取样本时，可参考以下步骤：<ol>
+<li>调大temperture和topp，针对同一个prompt多次输出response；</li>
+<li>计算大随机性参数下的回复与线上回复之间的相似度，找到相似度最小的回复（目标是为了获得比线上回复更好的response，找到差异性最大的response）；</li>
+<li>让能力更强的模型，进行GSB效果标注，获得偏好样本；</li>
+</ol>
+</li>
+<li>或者线上设计自动反馈机制，例如仿GPT4同时输出两个回复，让用户进行选择；</li>
+</ol>
+</li>
+<li><strong>DPO训练：</strong><ol>
+<li>DPO极易过拟合，学习到一些奇怪的模式；</li>
+<li>复杂任务，如人设强化，准备3000k条构造的训练样本，一般训一个epoch，会有效果；</li>
+<li>简易任务，如降低对话重复率，准备200条构造样本，训一个epoch，即有效果；</li>
+</ol>
+</li>
+</ol>
+<h1 id="三、KTO数据构造经验"><a href="#三、KTO数据构造经验" class="headerlink" title="三、KTO数据构造经验"></a>三、KTO数据构造经验</h1><h2 id="1-基础要求-2"><a href="#1-基础要求-2" class="headerlink" title="1.基础要求"></a>1.基础要求</h2><p>同SFT数据构造的要求</p>
+<h2 id="2-构造经验-2"><a href="#2-构造经验-2" class="headerlink" title="2.构造经验"></a>2.构造经验</h2><ol>
+<li>获取线上真实的赞踩数据反馈，除赞踩按钮外，设计更多的相关信号，例如问答任务中，用户会有换query的行为，加入更换相近含义的query后，用户对更换query后的answer进行了赞踩，则可信度很高。</li>
+<li>详尽的自动评估方法，从赞数据中筛选出明显错误的回复；</li>
+</ol>
+<p><strong>总的来说：训练数据的影响远大于训练参数的影响</strong></p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/about/">About</a></li>
+        
+          <li><a href="/archives/">Writing</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="http://github.com/probberechts">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81SFT%E6%95%B0%E6%8D%AE%E6%9E%84%E9%80%A0-%E8%AE%AD%E7%BB%83%E7%BB%8F%E9%AA%8C"><span class="toc-number">1.</span> <span class="toc-text">一、SFT数据构造&#x2F;训练经验</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%9F%BA%E7%A1%80%E8%A6%81%E6%B1%82"><span class="toc-number">1.1.</span> <span class="toc-text">1.基础要求</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%EF%BC%881%EF%BC%89%E5%9F%BA%E7%A1%80%E5%8E%9F%E5%88%99"><span class="toc-number">1.1.1.</span> <span class="toc-text">（1）基础原则</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%EF%BC%882%EF%BC%89%E6%A0%BC%E5%BC%8F%E8%A6%81%E6%B1%82"><span class="toc-number">1.1.2.</span> <span class="toc-text">（2）格式要求</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%EF%BC%883%EF%BC%89%E5%86%85%E5%AE%B9%E8%A6%81%E6%B1%82"><span class="toc-number">1.1.3.</span> <span class="toc-text">（3）内容要求</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E6%9E%84%E9%80%A0%E7%BB%8F%E9%AA%8C"><span class="toc-number">1.2.</span> <span class="toc-text">2.构造经验</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%EF%BC%881%EF%BC%89%E6%8A%93%E5%8F%96-%E6%A0%87%E6%B3%A8%E6%95%B0%E6%8D%AE%E6%97%B6%E7%9A%84%E7%9B%AE%E6%A0%87%EF%BC%9A"><span class="toc-number">1.2.1.</span> <span class="toc-text">（1）抓取&#x2F;标注数据时的目标：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%EF%BC%882%EF%BC%89%E6%8A%93%E5%8F%96-%E6%A0%87%E6%B3%A8%E6%95%B0%E6%8D%AE%E6%97%B6%E7%9A%84%E6%89%8B%E6%AE%B5%EF%BC%9A"><span class="toc-number">1.2.2.</span> <span class="toc-text">（2）抓取&#x2F;标注数据时的手段：</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81DPO%E6%95%B0%E6%8D%AE%E6%9E%84%E9%80%A0%E7%BB%8F%E9%AA%8C"><span class="toc-number">2.</span> <span class="toc-text">二、DPO数据构造经验</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%9F%BA%E7%A1%80%E8%A6%81%E6%B1%82-1"><span class="toc-number">2.1.</span> <span class="toc-text">1.基础要求</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E6%9E%84%E9%80%A0%E7%BB%8F%E9%AA%8C-1"><span class="toc-number">2.2.</span> <span class="toc-text">2.构造经验</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E3%80%81KTO%E6%95%B0%E6%8D%AE%E6%9E%84%E9%80%A0%E7%BB%8F%E9%AA%8C"><span class="toc-number">3.</span> <span class="toc-text">三、KTO数据构造经验</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%9F%BA%E7%A1%80%E8%A6%81%E6%B1%82-2"><span class="toc-number">3.1.</span> <span class="toc-text">1.基础要求</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E6%9E%84%E9%80%A0%E7%BB%8F%E9%AA%8C-2"><span class="toc-number">3.2.</span> <span class="toc-text">2.构造经验</span></a></li></ol></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2024/06/12/DataProcessEP/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2024/06/12/DataProcessEP/&text=大模型微调数据处理经验"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2024/06/12/DataProcessEP/&title=大模型微调数据处理经验"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2024/06/12/DataProcessEP/&is_video=false&description=大模型微调数据处理经验"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=大模型微调数据处理经验&body=Check out this article: http://example.com/2024/06/12/DataProcessEP/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2024/06/12/DataProcessEP/&title=大模型微调数据处理经验"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2024/06/12/DataProcessEP/&title=大模型微调数据处理经验"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2024/06/12/DataProcessEP/&title=大模型微调数据处理经验"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2024/06/12/DataProcessEP/&title=大模型微调数据处理经验"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2024/06/12/DataProcessEP/&name=大模型微调数据处理经验&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2024/06/12/DataProcessEP/&t=大模型微调数据处理经验"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2024
+    John Doe
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/probberechts">Projects</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>
