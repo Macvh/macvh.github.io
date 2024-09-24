@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="DPO效果调研Category: 大模型相关Author: MacvhCreated Date: August 29, 2024 3:10 PMCreated by: MacvhID: 8Slug: dpo效果调研-74c26Updated Date: September 24, 2024 8:17 PM状态: 已完成 一、DPO vs RLHF？基于人类反馈的强化学习RLHF分为三个阶段：全监督">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DPO效果调研">
+<meta property="og:url" content="http://example.com/2024/03/29/DPO/index.html">
+<meta property="og:site_name" content="Macvh@小屋">
+<meta property="og:description" content="DPO效果调研Category: 大模型相关Author: MacvhCreated Date: August 29, 2024 3:10 PMCreated by: MacvhID: 8Slug: dpo效果调研-74c26Updated Date: September 24, 2024 8:17 PM状态: 已完成 一、DPO vs RLHF？基于人类反馈的强化学习RLHF分为三个阶段：全监督">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2023/12/28/LlmIllusion/g">
+<meta property="og:image" content="http://example.com/2023/12/28/LlmIllusion/ng">
+<meta property="og:image" content="http://example.com/2023/12/28/LlmIllusion/ng">
+<meta property="og:image" content="http://example.com/2023/12/28/LlmIllusion/ng">
+<meta property="og:image" content="http://example.com/2023/12/28/LlmIllusion/ng">
+<meta property="article:published_time" content="2024-03-29T07:37:12.000Z">
+<meta property="article:modified_time" content="2024-09-24T12:28:22.814Z">
+<meta property="article:author" content="Macvh">
+<meta property="article:tag" content="大模型">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2023/12/28/LlmIllusion/g">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/myfavicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/myfavicon.ico" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/myfavicon.ico">
+        
+      
+    
+    <!-- title -->
+    <title>DPO效果调研</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/probberechts">Projects</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/2024/06/12/DataProcessEP/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2023/12/28/LlmIllusion/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2024/03/29/DPO/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2024/03/29/DPO/&text=DPO效果调研"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2024/03/29/DPO/&title=DPO效果调研"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2024/03/29/DPO/&is_video=false&description=DPO效果调研"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=DPO效果调研&body=Check out this article: http://example.com/2024/03/29/DPO/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2024/03/29/DPO/&title=DPO效果调研"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2024/03/29/DPO/&title=DPO效果调研"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2024/03/29/DPO/&title=DPO效果调研"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2024/03/29/DPO/&title=DPO效果调研"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2024/03/29/DPO/&name=DPO效果调研&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2024/03/29/DPO/&t=DPO效果调研"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#DPO%E6%95%88%E6%9E%9C%E8%B0%83%E7%A0%94"><span class="toc-number">1.</span> <span class="toc-text">DPO效果调研</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81DPO-vs-RLHF%EF%BC%9F"><span class="toc-number">2.</span> <span class="toc-text">一、DPO vs RLHF？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81DPO%E7%9A%84%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0%EF%BC%9F"><span class="toc-number">3.</span> <span class="toc-text">二、DPO的损失函数？</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#RLHF%E6%98%AF%E5%A6%82%E4%BD%95%E8%AE%AD%E7%BB%83%E7%9A%84%EF%BC%9F"><span class="toc-number">3.0.1.</span> <span class="toc-text">RLHF是如何训练的？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DPO%E7%9A%84%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0%EF%BC%9F"><span class="toc-number">3.0.2.</span> <span class="toc-text">DPO的损失函数？</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E3%80%81DPO%E7%9A%84%E5%BE%AE%E8%B0%83%E8%BF%87%E7%A8%8B%EF%BC%9F"><span class="toc-number">4.</span> <span class="toc-text">三、DPO的微调过程？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E4%BB%BB%E5%8A%A1%E6%95%88%E6%9E%9C%EF%BC%9A"><span class="toc-number">5.</span> <span class="toc-text">四、任务效果：</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E5%9C%A8%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%AF%B9%E9%BD%90%E4%B8%8ADPO%E4%BC%98%E4%BA%8EPPO%E5%90%97%EF%BC%9F"><span class="toc-number">6.</span> <span class="toc-text">五、在大模型对齐上DPO优于PPO吗？</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        DPO效果调研
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">Macvh</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2024-03-29T07:37:12.000Z" class="dt-published" itemprop="datePublished">2024-03-29</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%9B%B8%E5%85%B3/">大模型相关</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B/" rel="tag">大模型</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h1 id="DPO效果调研"><a href="#DPO效果调研" class="headerlink" title="DPO效果调研"></a>DPO效果调研</h1><p>Category: 大模型相关<br>Author: Macvh<br>Created Date: August 29, 2024 3:10 PM<br>Created by: Macvh<br>ID: 8<br>Slug: dpo效果调研-74c26<br>Updated Date: September 24, 2024 8:17 PM<br>状态: 已完成</p>
+<h1 id="一、DPO-vs-RLHF？"><a href="#一、DPO-vs-RLHF？" class="headerlink" title="一、DPO vs RLHF？"></a>一、DPO vs RLHF？</h1><p>基于人类反馈的强化学习<a target="_blank" rel="noopener" href="https://www.cnblogs.com/lemonzhang/p/17819158.html">RLHF分为三个阶段</a>：全监督微调（SFT）、奖励模型（RM）、强化学习（PPO）。但是RLHF面临缺陷：<strong>RLHF 是一个复杂且经常不稳定的过程</strong>，首先拟合反映人类偏好的奖励模型，然后使用强化学习微调大型无监督 LM，以最大化这种估计奖励，而不会偏离原始模型太远。为解决这一问题，<strong>提出一个直接偏好优化 (DPO) 的新算法：通过利用奖励函数与最优策略之间的映射关系，证明这个受限的奖励最大化问题可以通过单阶段的策略训练来精确优化，本质上是在人类偏好数据上解决一个分类问题</strong>。DPO是稳定的、性能和计算成本轻量级的，无需拟合奖励模型，在微调期间从 LM 中采样，或执行显着的超参数调整。</p>
+<p><img src="/2023/12/28/LlmIllusion/g"></p>
+<ol>
+<li>RLHF算法:**包含奖励模型(reward model)和策略模型(policy model，也称为演员模型，actor model)**，基于偏好数据以及强化学习不断迭代优化策略模型的过程。</li>
+<li>DPO算法:<strong>不包含奖励模型和强化学习过程，直接通过偏好数据进行微调，将强化学习过程直接转换为SFT过程</strong>，因此整个训练过程简单、高效，<strong>主要的改进之处体现在于损失函数</strong>。</li>
+</ol>
+<p>ps:</p>
+<ol>
+<li>偏好数据，可以表示为三元组(提示语prompt, 良好回答chosen, 一般回答rejected)。论文中的chosen表示为下标w(即win)，rejected表示为下标l(即lose)</li>
+<li>RLHF常使用PPO作为基础算法，整体流程包含了4个模型，且通常训练过程中需要针对训练的actor model进行采样，<strong>因此训练起来，稳定性、效率、效果不易控制</strong>。</li>
+</ol>
+<ul>
+<li>actor model&#x2F;policy model: 待训练的模型，通常是SFT训练后的模型作为初始化reference model: 参考模型，也是经SFT训练后的模型进行初始化，且通常与actor model是同一个模型，且模型冻结，不参与训练，其作用是在强化学习过程中，保障actor model与reference model的分布差异不宜过大。reward model: 奖励模型，用于提供每个状态或状态动作对的即时奖励信号。critic model: 作用是估计状态或状态动作对的长期价值，也称为状态值函数或动作值函数。</li>
+</ul>
+<ol start="3">
+<li>DPO算法仅包含RLHF中的两个模型，即演员模型(actor model)以及参考(reference model)，且训练过程中不需要进行数据采样。</li>
+</ol>
+<h1 id="二、DPO的损失函数？"><a href="#二、DPO的损失函数？" class="headerlink" title="二、DPO的损失函数？"></a>二、DPO的损失函数？</h1><h3 id="RLHF是如何训练的？"><a href="#RLHF是如何训练的？" class="headerlink" title="RLHF是如何训练的？"></a>RLHF是如何训练的？</h3><ol>
+<li><strong>第一步：</strong>训练reward model。训练数据是同一个prompt的2个回答，让人或者LLM标注哪个回答更好，reward去优化如下的loss：</li>
+</ol>
+<p><img src="/2023/12/28/LlmIllusion/ng"></p>
+<p>其中$r$就是reward model 用来给回答打分。$D$是训练数据集，$x$是prompt，$y_{w}$和$y_{l}$分别是好的回答和不好的回答。也就是说要尽可能让好的回答的得分比不好的回答高，拉大他们之间的差别。</p>
+<ol start="2">
+<li><strong>第二步：</strong>用RL算法来提升模型的得分。使用的loss是：</li>
+</ol>
+<p><img src="/2023/12/28/LlmIllusion/ng"></p>
+<p>以上是模型的训练目标，在希望得到最大的reward的同时，通过KL divergence约束模型使模型不要偏离reference model太远，这里的ref一般就是SFT之后的模型，也就是用强化学习进行微调前的原始模型。</p>
+<h3 id="DPO的损失函数？"><a href="#DPO的损失函数？" class="headerlink" title="DPO的损失函数？"></a>DPO的损失函数？</h3><p>RLHF的损失函数是可以简化的，具体推导过程详见<a target="_blank" rel="noopener" href="https://arxiv.org/pdf/2305.18290">DPO论文</a>的附件，最终DPO的损失函数如下：</p>
+<p><img src="/2023/12/28/LlmIllusion/ng"></p>
+<p>该目标增加了对偏好数据$y_{w}$的可能性，并减少了非偏好数据$y_{l}$的可能性，并进行评级加权通过$\beta$缩放，进而学到人类偏好（利用了从奖励函数到最优策略的解析映射，允许直接使用人类偏好数据进行简化的优化过程）。</p>
+<p>为了从原理上理解 DPO，分析损失函数的梯度$𝐿_{𝐷𝑃𝑂}$。 相对于参数 θ 的梯度可以写为：</p>
+<p><img src="/2023/12/28/LlmIllusion/ng"></p>
+<p>其中$\hat{r}<em>{\theta}(x, y)&#x3D;\beta \log \frac{\pi</em>{\theta}(y \mid x)}{\pi_{\mathrm{ref}}(y \mid x)}$是由语言模型$𝜋<em>𝜃$和参考模型$𝜋</em>{𝑟𝑒𝑓}$隐式定义的奖励函数。直观上，损失函数 $𝐿_{𝐷𝑃𝑂}$的梯度增加了偏好$𝑦<em>𝑤$ 的可能性，并降低了非偏好$𝑦_l$的可能性。更重要的是，样例的权重是通过: $\hat{r}</em>{\theta}$对非偏好的评分高多少来衡量的，即$\hat{r}<em>{\theta}(x,y_l)-\hat{r}</em>{\theta}(x,y_w)$，按 $β $进行缩放，即策略模型错误的程度。</p>
+<p><strong>DPO通过以上loss把RLHF无损的转化为了SFT</strong>，在训练的时候不再需要同时跑4个模型（reward model, ref model, critic, actor），而是只用跑actor和ref 2个模型，甚至由于不再在线采样数据，ref model的输出可以预先存下来，在训练的时候重复利用。</p>
+<h1 id="三、DPO的微调过程？"><a href="#三、DPO的微调过程？" class="headerlink" title="三、DPO的微调过程？"></a>三、DPO的微调过程？</h1><ol>
+<li>步骤1）是在构造数据集，通过对同一问题的两种回复的倾向性：chosen or rejected，反映人类偏好。</li>
+<li>步骤2）在于优化，具体过程大概是，对于同一个question prompt，模型在两种模型：language&#x2F;policy model 和 reference model下分别生成，对应chosen 和 rejected label真值标签的生成概率，因此可以获得四种概率值：policy_chosen_logps, policy_rejected_logps, reference_chosen_logps, reference_rejected_logps, 用于DPO loss计算。</li>
+</ol>
+<h1 id="四、任务效果："><a href="#四、任务效果：" class="headerlink" title="四、任务效果："></a>四、任务效果：</h1><ol>
+<li>多轮对话任务，降低重复率：重复率 22% -&gt; <strong>12%</strong> 结论：DPO可以有效降低重复率，可以通过自迭代的方式逐步降低重复率</li>
+<li>RAG任务，降低建议类话术长度过长的问题，-1分比例降低(10.7%-&gt;0)，2分比例提升(57.1%-&gt;67.8%)。</li>
+<li>C口语话对话任务，优质率+12pp。</li>
+</ol>
+<h1 id="五、在大模型对齐上DPO优于PPO吗？"><a href="#五、在大模型对齐上DPO优于PPO吗？" class="headerlink" title="五、在大模型对齐上DPO优于PPO吗？"></a>五、<strong>在大模型对齐上DPO优于PPO吗？</strong></h1><p>论文地址：<a target="_blank" rel="noopener" href="https://arxiv.org/pdf/2404.10719">https://arxiv.org/pdf/2404.10719</a></p>
+<p><strong>理论：</strong>奖励指定错误的根本原因是偏好数据集的分布范围狭窄。 学习到的奖励模型可以为分布外（OOD）样本分配较高的价值，并且有可能在强化学习过程中被利用。 <strong>尽管 DPO 避免了训练奖励模型，但它仍然存在 OOD 样本的错误指定问题，但方式不同。</strong> 具体来说，DPO 可以制定有利于看不见的响应的偏差分布，直接影响学习策略的质量。 相比之下，PPO 可以利用仅提示数据并生成超出偏好数据集分布的响应。 在训练期间，𝜋𝜃 和 𝜋ref 之间的 KL 散度可以为这些生成的样本上的 PPO 提供额外的正则化。</p>
+<p><strong>实验：</strong>在实践中，DPO 和学习的奖励模型可以为偏好数据集分布中的响应分配高值，这些值用圆圈标记。 在 DPO 的情况下，最终模型可能会为这些响应分配比参考模型更高的概率，这是不可取的，因为无法保证 OOD 响应的性能改进。相比之下，虽然奖励模型也有类似的错误指定问题，但 PPO 可以通过显式 KL 正则化来缓解该问题。 参考模型。<strong>DPO 很容易生成偏向于分布外响应的政策，从而导致不可预测的行为。</strong></p>
+<p>结论：</p>
+<ol>
+<li>通过<strong>减轻模型和偏好数据集之间的分布变化</strong>可以提高 DPO 的性能。 为了缓解分布偏移和噪声数据的问题，我们建议采用<strong>迭代 DPO 方法</strong>。 每次都应该<strong>仔细</strong>注释模型生成的样本，然后进行下一轮训练。（通过理论和实验分析，我们探讨了 DPO 的局限性，发现 DPO 对基础模型输出和偏好数据之间的分布变化很敏感。 我们建议迭代 DPO 优于静态数据训练。 然而，我们还发现 DPO 无法提高代码生成等挑战性任务的性能。）<ol>
+<li><strong>基本模型的影响。</strong> 当使用<em>SFT（Alpaca）</em>作为基础和参考模型时，我们发现DPO表现不佳，仅产生55.4%安全率和较低的帮助奖励。 我们假设这是由基础模型的训练数据（即 Alpaca 数据集）和偏好数据（即 SafeRLHF 数据集）之间的分布变化引起的。 为了研究影响，我们在 SafeRLHF 数据集上进一步对 <em>SFT (Alpaca)</em> 进行安全响应，以获得 <em>SFT (Safe)<em>。 然后我们使用</em>SFT（安全）</em>作为参考模型从头开始重新训练DPO。</li>
+<li><strong>对偏好数据的敏感性。</strong> SafeRLHF 数据集中存在对 (𝐱,𝐲1,𝐲2)，其中 𝐲1 和 𝐲2 具有相同的安全标签。 在过滤掉数据集中的双不安全和双安全偏好数据后，训练后的模型可以获得更高的安全率。 然而，过滤双重安全偏好数据会在很大程度上损害帮助性的表现。 这些结果表明，虽然 DPO 可能会从消除训练数据中的噪音或争议中获得优势，但过度丢弃高质量数据可能会损害 DPO 的性能。</li>
+<li><strong>偏好数据分布的影响。</strong> 虽然可以通过额外的 SFT 来减轻分布变化，但我们还研究了使用基本模型收集额外的数据是否可以带来好处。 具体来说，我们不使用现有的偏好数据，而是使用 <em>SFT（安全）</em> 生成新的响应，并使用学习的奖励模型进行偏好标记。 我们进一步重复这个过程，迭代地将参考模型设置为最后一次迭代中最新的DPO模型。 我们将此方法表示为<em>DPO-Iter</em>。 值得注意的是，<em>DPO-Iter</em> 实现了与 PPO 相当的安全率。 该实验再次证明可以通过减轻分布偏移来改进 DPO。 然而，与 PPO 相比，它获得的帮助奖励也低得多。</li>
+</ol>
+</li>
+</ol>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/about/">About</a></li>
+        
+          <li><a href="/archives/">Writing</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="http://github.com/probberechts">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#DPO%E6%95%88%E6%9E%9C%E8%B0%83%E7%A0%94"><span class="toc-number">1.</span> <span class="toc-text">DPO效果调研</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81DPO-vs-RLHF%EF%BC%9F"><span class="toc-number">2.</span> <span class="toc-text">一、DPO vs RLHF？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81DPO%E7%9A%84%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0%EF%BC%9F"><span class="toc-number">3.</span> <span class="toc-text">二、DPO的损失函数？</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#RLHF%E6%98%AF%E5%A6%82%E4%BD%95%E8%AE%AD%E7%BB%83%E7%9A%84%EF%BC%9F"><span class="toc-number">3.0.1.</span> <span class="toc-text">RLHF是如何训练的？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DPO%E7%9A%84%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0%EF%BC%9F"><span class="toc-number">3.0.2.</span> <span class="toc-text">DPO的损失函数？</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E3%80%81DPO%E7%9A%84%E5%BE%AE%E8%B0%83%E8%BF%87%E7%A8%8B%EF%BC%9F"><span class="toc-number">4.</span> <span class="toc-text">三、DPO的微调过程？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E4%BB%BB%E5%8A%A1%E6%95%88%E6%9E%9C%EF%BC%9A"><span class="toc-number">5.</span> <span class="toc-text">四、任务效果：</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E5%9C%A8%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%AF%B9%E9%BD%90%E4%B8%8ADPO%E4%BC%98%E4%BA%8EPPO%E5%90%97%EF%BC%9F"><span class="toc-number">6.</span> <span class="toc-text">五、在大模型对齐上DPO优于PPO吗？</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2024/03/29/DPO/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2024/03/29/DPO/&text=DPO效果调研"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2024/03/29/DPO/&title=DPO效果调研"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2024/03/29/DPO/&is_video=false&description=DPO效果调研"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=DPO效果调研&body=Check out this article: http://example.com/2024/03/29/DPO/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2024/03/29/DPO/&title=DPO效果调研"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2024/03/29/DPO/&title=DPO效果调研"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2024/03/29/DPO/&title=DPO效果调研"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2024/03/29/DPO/&title=DPO效果调研"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2024/03/29/DPO/&name=DPO效果调研&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2024/03/29/DPO/&t=DPO效果调研"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2024
+    Macvh
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/probberechts">Projects</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>
