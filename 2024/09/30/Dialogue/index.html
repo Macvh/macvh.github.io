@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="1. 多轮对话系统介绍多轮对话任务可以看作是一个序列到序列的任务，它从用户消息中生成系统响应。可分为 TOD 系统和 ODD 系统。TOD 系统可帮助用户解决特定域内的任务，例如酒店预订、餐厅推荐等，而 ODD 系统则不受域限制地与用户聊天。TOD 任务和 ODD 任务并不完全独立，一旦对话系统检测到特定的用户需求，ODD 任务就可以转换为 TOD 任务。  引用至 [1] A Survey on">
+<meta property="og:type" content="article">
+<meta property="og:title" content="多轮对话系统的调研">
+<meta property="og:url" content="http://example.com/2024/09/30/Dialogue/index.html">
+<meta property="og:site_name" content="Macvh@小屋">
+<meta property="og:description" content="1. 多轮对话系统介绍多轮对话任务可以看作是一个序列到序列的任务，它从用户消息中生成系统响应。可分为 TOD 系统和 ODD 系统。TOD 系统可帮助用户解决特定域内的任务，例如酒店预订、餐厅推荐等，而 ODD 系统则不受域限制地与用户聊天。TOD 任务和 ODD 任务并不完全独立，一旦对话系统检测到特定的用户需求，ODD 任务就可以转换为 TOD 任务。  引用至 [1] A Survey on">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2023/12/28/LlmIllusion/ge.png">
+<meta property="og:image" content="http://example.com/2023/12/28/LlmIllusion/ge1.png">
+<meta property="og:image" content="http://example.com/2023/12/28/LlmIllusion/ge2.png">
+<meta property="og:image" content="http://example.com/2023/12/28/LlmIllusion/ge3.png">
+<meta property="og:image" content="http://example.com/2023/12/28/LlmIllusion/ge4.png">
+<meta property="article:published_time" content="2024-09-30T09:18:43.000Z">
+<meta property="article:modified_time" content="2024-09-30T09:23:49.050Z">
+<meta property="article:author" content="Macvh">
+<meta property="article:tag" content="大模型">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2023/12/28/LlmIllusion/ge.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/myfavicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/myfavicon.ico" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/myfavicon.ico">
+        
+      
+    
+    <!-- title -->
+    <title>多轮对话系统的调研</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/probberechts">Projects</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2024/06/12/DataProcessEP/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2024/09/30/Dialogue/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2024/09/30/Dialogue/&text=多轮对话系统的调研"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2024/09/30/Dialogue/&title=多轮对话系统的调研"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2024/09/30/Dialogue/&is_video=false&description=多轮对话系统的调研"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=多轮对话系统的调研&body=Check out this article: http://example.com/2024/09/30/Dialogue/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2024/09/30/Dialogue/&title=多轮对话系统的调研"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2024/09/30/Dialogue/&title=多轮对话系统的调研"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2024/09/30/Dialogue/&title=多轮对话系统的调研"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2024/09/30/Dialogue/&title=多轮对话系统的调研"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2024/09/30/Dialogue/&name=多轮对话系统的调研&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2024/09/30/Dialogue/&t=多轮对话系统的调研"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-%E5%A4%9A%E8%BD%AE%E5%AF%B9%E8%AF%9D%E7%B3%BB%E7%BB%9F%E4%BB%8B%E7%BB%8D"><span class="toc-number">1.</span> <span class="toc-text">1. 多轮对话系统介绍</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-%E5%BD%93%E5%89%8D%E4%B8%9A%E5%8A%A1%E4%B8%AD%E5%AF%B9%E8%AF%9D%E7%B3%BB%E7%BB%9F%E7%9A%84%E7%8E%B0%E7%8A%B6%E4%B8%8E%E6%8C%91%E6%88%98"><span class="toc-number">2.</span> <span class="toc-text">2. 当前业务中对话系统的现状与挑战</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-%E5%9F%BA%E4%BA%8E%E8%A7%84%E5%88%99-%E6%A3%80%E7%B4%A2%E7%9A%84%E5%AF%B9%E8%AF%9D%E7%AD%96%E7%95%A5"><span class="toc-number">2.1.</span> <span class="toc-text">2.1 基于规则&#x2F;检索的对话策略</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-%E5%9F%BA%E4%BA%8E%E5%A4%A7%E8%A7%84%E6%A8%A1%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B%EF%BC%88LLM%EF%BC%89%E7%9A%84%E5%AF%B9%E8%AF%9D%E7%AD%96%E7%95%A5"><span class="toc-number">2.2.</span> <span class="toc-text">2.2 基于大规模语言模型（LLM）的对话策略</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-%E5%9F%BA%E4%BA%8E%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%9A%84%E5%AF%B9%E8%AF%9D%E7%B3%BB%E7%BB%9F"><span class="toc-number">3.</span> <span class="toc-text">3. 基于大模型的对话系统</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#3-1-%E5%9F%BA%E4%BA%8Epipeline%E7%9A%84%E6%96%B9%E6%B3%95"><span class="toc-number">3.1.</span> <span class="toc-text">3.1 基于pipeline的方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-1-%E7%AE%80%E5%8D%95%E6%9D%A5%E8%AF%B4%E5%88%86%E4%B8%BA%E4%BB%A5%E4%B8%8B%E5%87%A0%E6%AD%A5%EF%BC%9A"><span class="toc-number">3.1.1.</span> <span class="toc-text">3.1.1 简单来说分为以下几步：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-2-%E7%BB%93%E8%AE%BA"><span class="toc-number">3.1.2.</span> <span class="toc-text">3.1.2 结论</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-2-%E5%9F%BA%E4%BA%8E%E7%AB%AF%E5%88%B0%E7%AB%AF%E7%9A%84%E6%96%B9%E6%B3%95"><span class="toc-number">3.2.</span> <span class="toc-text">3.2 基于端到端的方法</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-%E4%BC%98%E5%8C%96%E7%AD%96%E7%95%A5"><span class="toc-number">4.</span> <span class="toc-text">4. 优化策略</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="toc-number">5.</span> <span class="toc-text">参考文献</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        多轮对话系统的调研
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">Macvh</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2024-09-30T09:18:43.000Z" class="dt-published" itemprop="datePublished">2024-09-30</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%9B%B8%E5%85%B3/">大模型相关</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B/" rel="tag">大模型</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h1 id="1-多轮对话系统介绍"><a href="#1-多轮对话系统介绍" class="headerlink" title="1. 多轮对话系统介绍"></a>1. 多轮对话系统介绍</h1><p>多轮对话任务可以看作是一个序列到序列的任务，它从用户消息中生成系统响应。可分为 TOD 系统和 ODD 系统。TOD 系统可帮助用户解决特定域内的任务，例如酒店预订、餐厅推荐等，而 ODD 系统则不受域限制地与用户聊天。TOD 任务和 ODD 任务并不完全独立，一旦对话系统检测到特定的用户需求，ODD 任务就可以转换为 TOD 任务。</p>
+<blockquote>
+<p>引用至 [1] A Survey on Recent Advances in LLM-Based Multi-turn Dialogue Systems</p>
+</blockquote>
+<h1 id="2-当前业务中对话系统的现状与挑战"><a href="#2-当前业务中对话系统的现状与挑战" class="headerlink" title="2. 当前业务中对话系统的现状与挑战"></a>2. 当前业务中对话系统的现状与挑战</h1><h2 id="2-1-基于规则-检索的对话策略"><a href="#2-1-基于规则-检索的对话策略" class="headerlink" title="2.1 基于规则&#x2F;检索的对话策略"></a>2.1 基于规则&#x2F;检索的对话策略</h2><p>在这种策略下，人类专家会设定一系列的对话规则或者说模版，类似于编程中的“if-else”逻辑。当系统接收到用户的输入时，它会根据这些预设的规则来选择合适的回复。这种方法的优势在于，只要用户的输入符合预设的规则，系统就能给出非常精准和满意的回应。</p>
+<p><strong>然而，这种策略也存在明显的局限性：</strong></p>
+<ol>
+<li>首先，它只能应对那些被明确包含在对话策略内的情况，对于策略之外的输入，系统往往无法灵活应对。</li>
+<li>其次，随着对话策略的复杂性和效果要求的提升，维护这些规则的成本也会显著增加。这不仅需要专家投入大量的时间和精力，还可能导致系统在面对复杂对话时变得笨拙和不堪重负。</li>
+</ol>
+<h2 id="2-2-基于大规模语言模型（LLM）的对话策略"><a href="#2-2-基于大规模语言模型（LLM）的对话策略" class="headerlink" title="2.2 基于大规模语言模型（LLM）的对话策略"></a>2.2 基于大规模语言模型（LLM）的对话策略</h2><p>为了克服基于规则的对话策略的局限性，另一种方法是通过训练大规模语言模型（LLM）来学习复杂的对话策略。这种方法的核心在于，通过让模型接触大量的对话数据，使其能够学习到人类对话中的隐含规则和模式，并依赖大模型自身的能力，使得对话系统具备更强的泛化能力。</p>
+<p>这种策略的优势在于其广泛的适应性和强大的举一反三能力。由于模型是从真实的对话数据中学习，因此它能够应对更加多样化和复杂的对话场景。此外，通过训练，模型能够捕捉到对话数据中的知识，并依赖自身的对话能力进一步提升其回复的丰富性。</p>
+<p><strong>然而，这种方法的实施也具备相当的困难：</strong></p>
+<ol>
+<li>首先，尽管模型能够从对话数据中学习到很多知识，但由于生成模型自身的特点，它无法保证在人类专家设定的对话策略内百分百正确，缺乏可解释性，会存在幻觉等无法料想到的问题，需要花费大力气设计复杂的评估方法。</li>
+<li>其次，真实人类的对话数据往往充满了复杂性和不确定性，如口语化表达、多问多答等情况。这些复杂性使得训练数据需要经过清洗和预处理才能用于模型训练，而这又可能导致模型失去一些真实对话中的细微差别和丰富性。因此，依靠这些数据也很难完全激发模型在特定专业场景下（如推销）的真实人类对话能力。</li>
+</ol>
+<h1 id="3-基于大模型的对话系统"><a href="#3-基于大模型的对话系统" class="headerlink" title="3. 基于大模型的对话系统"></a>3. 基于大模型的对话系统</h1><p><img src="/2023/12/28/LlmIllusion/ge.png"></p>
+<p>当前基于llm的对话系统大致分为两种框架，基于pipeline的方法和基于端到端的方法。</p>
+<h2 id="3-1-基于pipeline的方法"><a href="#3-1-基于pipeline的方法" class="headerlink" title="3.1 基于pipeline的方法"></a>3.1 基于pipeline的方法</h2><p><img src="/2023/12/28/LlmIllusion/ge1.png"></p>
+<p>基于流水线的 TOD 系统包括四个连接的模块：（1） NLU，用于提取用户意图和填充插槽;（2） 对话状态跟踪 （DST），基于 Pipeline 的 TOD 中的关键模块，用于根据 NLU 模块的输出和对话的历史输入跟踪当前回合的对话状态;（3） 策略学习 （PL），根据 DST 模块生成的对话状态确定后续动作;（4） NLG，基于 Pipeline 的 TOD 系统中的最后一个模块，将 PL 模块生成的对话动作转换为可理解的自然语言。Dialogue Manager （DM） 是基于管道的 TOD 系统的中央控制器，该系统由 DST 模块和 PL 模块组成。</p>
+<h3 id="3-1-1-简单来说分为以下几步："><a href="#3-1-1-简单来说分为以下几步：" class="headerlink" title="3.1.1 简单来说分为以下几步："></a>3.1.1 简单来说分为以下几步：</h3><blockquote>
+<p>引用至 [2] Are Large Language Models All You Need for Task-Oriented Dialogue?</p>
+</blockquote>
+<ol>
+<li><strong>第一步：</strong></li>
+</ol>
+<p><img src="/2023/12/28/LlmIllusion/ge2.png"></p>
+<p>进行<em>领域识别</em>，判断当前用户输入属于领域，明确了领域之后，可以判断当前对话处于什么状态，以及确定下一步对话系统应当采取怎样的对话策略。</p>
+<ol start="2">
+<li><strong>第二步：</strong></li>
+</ol>
+<p><img src="/2023/12/28/LlmIllusion/ge3.png"></p>
+<p>然后是进行<em>对话状态更新</em>，根据领域识别的结果，提供任务定义、领域描述、对话历史和用户画像信息等内容，总结当前用户的对话状态。</p>
+<ol start="3">
+<li><strong>第三步：</strong></li>
+</ol>
+<p><img src="/2023/12/28/LlmIllusion/ge4.png"></p>
+<p>最后是进行<em>对话生成</em>，结合前面步骤获取的内容，生成给用户的回复。可采取一系列简单的对话策略逻辑。</p>
+<h3 id="3-1-2-结论"><a href="#3-1-2-结论" class="headerlink" title="3.1.2 结论"></a>3.1.2 结论</h3><p>基于大模型的pipeline方法，有研究者得出结论：</p>
+<ul>
+<li>状态跟踪模块，大模型的表现并不好，需要依赖更多的调整以及更强的结果解析，才能够优化。</li>
+<li>而在足够好的状态跟踪下，大模型在最终的结果生成下，能表现得很好，即使没做微调。</li>
+</ul>
+<p>总的来说，基于pipeline的方法会存在错误传播的问题，前面识别的好不一定保证后面生成的好，但前面识别错了，会引发一些列的错误，所以前置模块（也就是query理解、对话状态识别）的效果需要得到一定的保证。这一块的优化需要涉及人类专家的参与，设计总结出适合的模版策略和标签，涉及NLU的部分已经有许多研究了，可以大力出奇迹，基础schema设计的好，标一部分数据直接去微调模型，相信也会有较好的效果。也可以有一些prompt工程，例如</p>
+<blockquote>
+<p>引用至 [3] CoF-CoT: Enhancing Large Language Models with Coarse-to-Fine Chain-of-Thought Prompting for Multi-domain NLU Tasks</p>
+</blockquote>
+<p>最核心的还是需要熟悉业务、理解业务（看真实数据还是少不了），设计出两个目标的schem，</p>
+<ol>
+<li>真实的、对业务真有提升的schema</li>
+<li>简单的、让模型能学的通的schema</li>
+</ol>
+<p>同步也可以借用大语言模型的能力例如</p>
+<blockquote>
+<p>引用至[4] In-Context Learning for Few-Shot Dialogue State Tracking</p>
+</blockquote>
+<h2 id="3-2-基于端到端的方法"><a href="#3-2-基于端到端的方法" class="headerlink" title="3.2 基于端到端的方法"></a>3.2 基于端到端的方法</h2><p>基于端到端的对话方法通过整合并同步训练pipeline中的所有模块来实现优化。在这种方法中，用户当前轮次的输入被直接作为系统的输入，而系统生成的回复则作为最终输出。这种方法在当前的业务实践中得到了广泛应用。</p>
+<p>在实际业务场景中，我们通常会面临特定的对话任务。这些任务可能已经积累了一些传统对话模型的策略数据、历史对话数据，或是真实的人与人之间的对话数据。为了快速实现一个可用的对话系统，一种常见的做法是直接对这些数据进行清洗，并用于训练大语言模型。凭借现代大语言模型强大的学习能力，我们往往能够迅速得到一个表现尚可的模型版本，并将其部署到生产环境中。</p>
+<p>然而，这种快速上线的做法往往也存在着问题。尽管初期通过清洗真实的人人对话数据能够获得一定的性能提升，但这种提升很快就会达到瓶颈。随后，我们会发现模型的表现仍然远远不及真实的人类领域专家，大语言模型的在任务导向的对话任务中表现往往不如在开放域对话任务上。</p>
+<h1 id="4-优化策略"><a href="#4-优化策略" class="headerlink" title="4. 优化策略"></a>4. 优化策略</h1><ol>
+<li><strong>标注或者获取真实精细化的对话数据</strong>：根据对话领域任务的具体特点，对任务进行细致拆分。务必确保涵盖各种对话场景及相应的应对策略，从而全面提升数据的丰富性与针对性。</li>
+<li><strong>模块化拆分与精细化处理</strong>：通过采用pipeline方式，将对话系统拆分为多个精细模块，在这之中积极引入人类专家的知识与经验，以增强系统的专业性与实用性。</li>
+</ol>
+<p>综上所述，深入理解和熟悉业务是优化对话系统的关键。当前我的业务的leader，除了开会就是听取真实的对话录音，深入挖掘与分析数据。无论是传统NLP时代还是如今的大模型时代，精心整理、抽象、总结数据特点、schema都是不可或缺的环节。在这个过程中，没有捷径可走（自勉，实际业务中，算法工程师真得面向excel&#x2F;sublime 编程）。</p>
+<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><ol>
+<li><strong>A Survey on Recent Advances in LLM-Based Multi-turn Dialogue Systems.</strong> <a target="_blank" rel="noopener" href="https://arxiv.org/search/cs?searchtype=author&query=Yi,+Z">Zihao Yi</a>, <a target="_blank" rel="noopener" href="https://arxiv.org/search/cs?searchtype=author&query=Ouyang,+J">Jiarui Ouyang</a>, <a target="_blank" rel="noopener" href="https://arxiv.org/search/cs?searchtype=author&query=Liu,+Y">Yuwen Liu</a>, <a target="_blank" rel="noopener" href="https://arxiv.org/search/cs?searchtype=author&query=Liao,+T">Tianhao Liao</a>, <a target="_blank" rel="noopener" href="https://arxiv.org/search/cs?searchtype=author&query=Xu,+Z">Zhe Xu</a>, <a target="_blank" rel="noopener" href="https://arxiv.org/search/cs?searchtype=author&query=Shen,+Y">Ying Shen</a></li>
+<li><strong>Are LLMs All You Need for Task-Oriented Dialogue?</strong> <a target="_blank" rel="noopener" href="https://arxiv.org/search/cs?searchtype=author&query=Hude%C4%8Dek,+V">Vojtěch Hudeček</a>, <a target="_blank" rel="noopener" href="https://arxiv.org/search/cs?searchtype=author&query=Du%C5%A1ek,+O">Ondřej Dušek</a></li>
+<li><strong>CoF-CoT: Enhancing Large Language Models with Coarse-to-Fine Chain-of-Thought Prompting for Multi-domain NLU Tasks.</strong> <a target="_blank" rel="noopener" href="https://arxiv.org/search/cs?searchtype=author&query=Nguyen,+H+H">Hoang H. Nguyen</a>, <a target="_blank" rel="noopener" href="https://arxiv.org/search/cs?searchtype=author&query=Liu,+Y">Ye Liu</a>, <a target="_blank" rel="noopener" href="https://arxiv.org/search/cs?searchtype=author&query=Zhang,+C">Chenwei Zhang</a>, <a target="_blank" rel="noopener" href="https://arxiv.org/search/cs?searchtype=author&query=Zhang,+T">Tao Zhang</a>, <a target="_blank" rel="noopener" href="https://arxiv.org/search/cs?searchtype=author&query=Yu,+P+S">Philip S. Yu</a></li>
+<li><strong>In-Context Learning for Few-Shot Dialogue State Tracking.</strong> <a target="_blank" rel="noopener" href="https://arxiv.org/search/cs?searchtype=author&query=Hu,+Y">Yushi Hu</a>, <a target="_blank" rel="noopener" href="https://arxiv.org/search/cs?searchtype=author&query=Lee,+C">Chia-Hsuan Lee</a>, <a target="_blank" rel="noopener" href="https://arxiv.org/search/cs?searchtype=author&query=Xie,+T">Tianbao Xie</a>, <a target="_blank" rel="noopener" href="https://arxiv.org/search/cs?searchtype=author&query=Yu,+T">Tao Yu</a>, <a target="_blank" rel="noopener" href="https://arxiv.org/search/cs?searchtype=author&query=Smith,+N+A">Noah A. Smith</a>, <a target="_blank" rel="noopener" href="https://arxiv.org/search/cs?searchtype=author&query=Ostendorf,+M">Mari Ostendorf</a></li>
+</ol>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/about/">About</a></li>
+        
+          <li><a href="/archives/">Writing</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="http://github.com/probberechts">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-%E5%A4%9A%E8%BD%AE%E5%AF%B9%E8%AF%9D%E7%B3%BB%E7%BB%9F%E4%BB%8B%E7%BB%8D"><span class="toc-number">1.</span> <span class="toc-text">1. 多轮对话系统介绍</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-%E5%BD%93%E5%89%8D%E4%B8%9A%E5%8A%A1%E4%B8%AD%E5%AF%B9%E8%AF%9D%E7%B3%BB%E7%BB%9F%E7%9A%84%E7%8E%B0%E7%8A%B6%E4%B8%8E%E6%8C%91%E6%88%98"><span class="toc-number">2.</span> <span class="toc-text">2. 当前业务中对话系统的现状与挑战</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-%E5%9F%BA%E4%BA%8E%E8%A7%84%E5%88%99-%E6%A3%80%E7%B4%A2%E7%9A%84%E5%AF%B9%E8%AF%9D%E7%AD%96%E7%95%A5"><span class="toc-number">2.1.</span> <span class="toc-text">2.1 基于规则&#x2F;检索的对话策略</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-%E5%9F%BA%E4%BA%8E%E5%A4%A7%E8%A7%84%E6%A8%A1%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B%EF%BC%88LLM%EF%BC%89%E7%9A%84%E5%AF%B9%E8%AF%9D%E7%AD%96%E7%95%A5"><span class="toc-number">2.2.</span> <span class="toc-text">2.2 基于大规模语言模型（LLM）的对话策略</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-%E5%9F%BA%E4%BA%8E%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%9A%84%E5%AF%B9%E8%AF%9D%E7%B3%BB%E7%BB%9F"><span class="toc-number">3.</span> <span class="toc-text">3. 基于大模型的对话系统</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#3-1-%E5%9F%BA%E4%BA%8Epipeline%E7%9A%84%E6%96%B9%E6%B3%95"><span class="toc-number">3.1.</span> <span class="toc-text">3.1 基于pipeline的方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-1-%E7%AE%80%E5%8D%95%E6%9D%A5%E8%AF%B4%E5%88%86%E4%B8%BA%E4%BB%A5%E4%B8%8B%E5%87%A0%E6%AD%A5%EF%BC%9A"><span class="toc-number">3.1.1.</span> <span class="toc-text">3.1.1 简单来说分为以下几步：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-2-%E7%BB%93%E8%AE%BA"><span class="toc-number">3.1.2.</span> <span class="toc-text">3.1.2 结论</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-2-%E5%9F%BA%E4%BA%8E%E7%AB%AF%E5%88%B0%E7%AB%AF%E7%9A%84%E6%96%B9%E6%B3%95"><span class="toc-number">3.2.</span> <span class="toc-text">3.2 基于端到端的方法</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-%E4%BC%98%E5%8C%96%E7%AD%96%E7%95%A5"><span class="toc-number">4.</span> <span class="toc-text">4. 优化策略</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="toc-number">5.</span> <span class="toc-text">参考文献</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2024/09/30/Dialogue/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2024/09/30/Dialogue/&text=多轮对话系统的调研"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2024/09/30/Dialogue/&title=多轮对话系统的调研"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2024/09/30/Dialogue/&is_video=false&description=多轮对话系统的调研"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=多轮对话系统的调研&body=Check out this article: http://example.com/2024/09/30/Dialogue/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2024/09/30/Dialogue/&title=多轮对话系统的调研"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2024/09/30/Dialogue/&title=多轮对话系统的调研"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2024/09/30/Dialogue/&title=多轮对话系统的调研"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2024/09/30/Dialogue/&title=多轮对话系统的调研"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2024/09/30/Dialogue/&name=多轮对话系统的调研&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2024/09/30/Dialogue/&t=多轮对话系统的调研"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2024
+    Macvh
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/probberechts">Projects</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>
