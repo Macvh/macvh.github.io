@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
     <meta name="description" content="一、结论OpenAI o1的核心特点：具有自我反思与错误修正的能力。  可能的训练数据：&lt;问题，思考过程（包括思考过程中出现的错误及错误修正过程），答案&gt;，关键点是思考过程要求包含解决方案的捷径，还包括试错、反思和回溯的完整探索过程。数据构建方法： 人类标注：由人类全面地记录真实解决推理任务的过程。见1.3.6节 多智能方法：一个智能体作为策略模型，进行推理，另一个智能体作为评论模型，">
 <meta property="og:type" content="article">
-<meta property="og:title" content="OpenaiO1">
+<meta property="og:title" content="OpenaiO1调研">
 <meta property="og:url" content="http://example.com/2024/10/25/OpenaiO1/index.html">
 <meta property="og:site_name" content="Macvh@小屋">
 <meta property="og:description" content="一、结论OpenAI o1的核心特点：具有自我反思与错误修正的能力。  可能的训练数据：&lt;问题，思考过程（包括思考过程中出现的错误及错误修正过程），答案&gt;，关键点是思考过程要求包含解决方案的捷径，还包括试错、反思和回溯的完整探索过程。数据构建方法： 人类标注：由人类全面地记录真实解决推理任务的过程。见1.3.6节 多智能方法：一个智能体作为策略模型，进行推理，另一个智能体作为评论模型，">
@@ -26,7 +26,7 @@
 <meta property="og:image" content="http://example.com/2023/12/28/LlmIllusion/ge10.png">
 <meta property="og:image" content="http://example.com/2023/12/28/LlmIllusion/ge11.png">
 <meta property="article:published_time" content="2024-10-25T08:58:50.000Z">
-<meta property="article:modified_time" content="2024-10-25T09:01:46.301Z">
+<meta property="article:modified_time" content="2024-10-25T09:04:05.079Z">
 <meta property="article:author" content="Macvh">
 <meta property="article:tag" content="大模型">
 <meta name="twitter:card" content="summary">
@@ -50,7 +50,7 @@
       
     
     <!-- title -->
-    <title>OpenaiO1</title>
+    <title>OpenaiO1调研</title>
     <!-- async scripts -->
     <!-- Google Analytics -->
 
@@ -120,16 +120,16 @@
     <div id="share" style="display: none">
       <ul>
   <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2024/10/25/OpenaiO1/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2024/10/25/OpenaiO1/&text=OpenaiO1"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2024/10/25/OpenaiO1/&title=OpenaiO1"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2024/10/25/OpenaiO1/&is_video=false&description=OpenaiO1"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=OpenaiO1&body=Check out this article: http://example.com/2024/10/25/OpenaiO1/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2024/10/25/OpenaiO1/&title=OpenaiO1"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2024/10/25/OpenaiO1/&title=OpenaiO1"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2024/10/25/OpenaiO1/&title=OpenaiO1"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2024/10/25/OpenaiO1/&title=OpenaiO1"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2024/10/25/OpenaiO1/&name=OpenaiO1&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2024/10/25/OpenaiO1/&t=OpenaiO1"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2024/10/25/OpenaiO1/&text=OpenaiO1调研"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2024/10/25/OpenaiO1/&title=OpenaiO1调研"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2024/10/25/OpenaiO1/&is_video=false&description=OpenaiO1调研"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=OpenaiO1调研&body=Check out this article: http://example.com/2024/10/25/OpenaiO1/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2024/10/25/OpenaiO1/&title=OpenaiO1调研"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2024/10/25/OpenaiO1/&title=OpenaiO1调研"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2024/10/25/OpenaiO1/&title=OpenaiO1调研"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2024/10/25/OpenaiO1/&title=OpenaiO1调研"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2024/10/25/OpenaiO1/&name=OpenaiO1调研&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2024/10/25/OpenaiO1/&t=OpenaiO1调研"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
@@ -149,7 +149,7 @@
   <header>
     
     <h1 class="posttitle p-name" itemprop="name headline">
-        OpenaiO1
+        OpenaiO1调研
     </h1>
 
 
@@ -440,16 +440,16 @@
     <div id="share-footer" style="display: none">
       <ul>
   <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2024/10/25/OpenaiO1/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2024/10/25/OpenaiO1/&text=OpenaiO1"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2024/10/25/OpenaiO1/&title=OpenaiO1"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2024/10/25/OpenaiO1/&is_video=false&description=OpenaiO1"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=OpenaiO1&body=Check out this article: http://example.com/2024/10/25/OpenaiO1/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2024/10/25/OpenaiO1/&title=OpenaiO1"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2024/10/25/OpenaiO1/&title=OpenaiO1"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2024/10/25/OpenaiO1/&title=OpenaiO1"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2024/10/25/OpenaiO1/&title=OpenaiO1"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2024/10/25/OpenaiO1/&name=OpenaiO1&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2024/10/25/OpenaiO1/&t=OpenaiO1"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2024/10/25/OpenaiO1/&text=OpenaiO1调研"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2024/10/25/OpenaiO1/&title=OpenaiO1调研"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2024/10/25/OpenaiO1/&is_video=false&description=OpenaiO1调研"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=OpenaiO1调研&body=Check out this article: http://example.com/2024/10/25/OpenaiO1/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2024/10/25/OpenaiO1/&title=OpenaiO1调研"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2024/10/25/OpenaiO1/&title=OpenaiO1调研"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2024/10/25/OpenaiO1/&title=OpenaiO1调研"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2024/10/25/OpenaiO1/&title=OpenaiO1调研"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2024/10/25/OpenaiO1/&name=OpenaiO1调研&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2024/10/25/OpenaiO1/&t=OpenaiO1调研"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
