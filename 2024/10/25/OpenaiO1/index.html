@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="一、结论OpenAI o1的核心特点：具有自我反思与错误修正的能力。  可能的训练数据：&lt;问题，思考过程（包括思考过程中出现的错误及错误修正过程），答案&gt;，关键点是思考过程要求包含解决方案的捷径，还包括试错、反思和回溯的完整探索过程。数据构建方法： 人类标注：由人类全面地记录真实解决推理任务的过程。见1.3.6节 多智能方法：一个智能体作为策略模型，进行推理，另一个智能体作为评论模型，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="OpenaiO1">
+<meta property="og:url" content="http://example.com/2024/10/25/OpenaiO1/index.html">
+<meta property="og:site_name" content="Macvh@小屋">
+<meta property="og:description" content="一、结论OpenAI o1的核心特点：具有自我反思与错误修正的能力。  可能的训练数据：&lt;问题，思考过程（包括思考过程中出现的错误及错误修正过程），答案&gt;，关键点是思考过程要求包含解决方案的捷径，还包括试错、反思和回溯的完整探索过程。数据构建方法： 人类标注：由人类全面地记录真实解决推理任务的过程。见1.3.6节 多智能方法：一个智能体作为策略模型，进行推理，另一个智能体作为评论模型，">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2023/12/28/LlmIllusion/ge.png">
+<meta property="og:image" content="http://example.com/2023/12/28/LlmIllusion/ge1.png">
+<meta property="og:image" content="http://example.com/2023/12/28/LlmIllusion/ge2.png">
+<meta property="og:image" content="http://example.com/2023/12/28/LlmIllusion/ge3.png">
+<meta property="og:image" content="http://example.com/2023/12/28/LlmIllusion/ge4.png">
+<meta property="og:image" content="http://example.com/2023/12/28/LlmIllusion/ge5.png">
+<meta property="og:image" content="http://example.com/2023/12/28/LlmIllusion/ge6.png">
+<meta property="og:image" content="http://example.com/2023/12/28/LlmIllusion/ge7.png">
+<meta property="og:image" content="http://example.com/2023/12/28/LlmIllusion/ge8.png">
+<meta property="og:image" content="http://example.com/2023/12/28/LlmIllusion/ge9.png">
+<meta property="og:image" content="http://example.com/2023/12/28/LlmIllusion/ge10.png">
+<meta property="og:image" content="http://example.com/2023/12/28/LlmIllusion/ge11.png">
+<meta property="article:published_time" content="2024-10-25T08:58:50.000Z">
+<meta property="article:modified_time" content="2024-10-25T09:01:46.301Z">
+<meta property="article:author" content="Macvh">
+<meta property="article:tag" content="大模型">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2023/12/28/LlmIllusion/ge.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/myfavicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/myfavicon.ico" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/myfavicon.ico">
+        
+      
+    
+    <!-- title -->
+    <title>OpenaiO1</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+		<script type="text/x-mathjax-config">
+		  MathJax.Hub.Config({
+			tex2jax: {
+			  skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+			  inlineMath: [['$','$']]
+			}
+		  });
+		</script>
+		<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/probberechts">Projects</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2024/09/30/Dialogue/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2024/10/25/OpenaiO1/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2024/10/25/OpenaiO1/&text=OpenaiO1"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2024/10/25/OpenaiO1/&title=OpenaiO1"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2024/10/25/OpenaiO1/&is_video=false&description=OpenaiO1"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=OpenaiO1&body=Check out this article: http://example.com/2024/10/25/OpenaiO1/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2024/10/25/OpenaiO1/&title=OpenaiO1"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2024/10/25/OpenaiO1/&title=OpenaiO1"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2024/10/25/OpenaiO1/&title=OpenaiO1"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2024/10/25/OpenaiO1/&title=OpenaiO1"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2024/10/25/OpenaiO1/&name=OpenaiO1&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2024/10/25/OpenaiO1/&t=OpenaiO1"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E7%BB%93%E8%AE%BA"><span class="toc-number">1.</span> <span class="toc-text">一、结论</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81O1%E5%8F%AF%E8%83%BD%E7%9A%84%E6%8A%80%E6%9C%AF%E7%BB%86%E8%8A%82"><span class="toc-number">2.</span> <span class="toc-text">二、O1可能的技术细节</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-1-O1%E7%9A%84%E6%80%9D%E7%BB%B4%E9%93%BE"><span class="toc-number">2.1.</span> <span class="toc-text">1.1 O1的思维链</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-2-%E4%B8%BA%E4%BD%95O1%E7%9A%84%E8%BF%99%E7%A7%8D%E9%95%BF%E6%80%9D%E8%80%83%E6%96%B9%E5%BC%8F%E4%BC%9A%E6%9C%89%E6%95%88%EF%BC%9F"><span class="toc-number">2.2.</span> <span class="toc-text">1.2 为何O1的这种长思考方式会有效？</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-1-%E6%8D%B7%E5%BE%84%E5%AD%A6%E4%B9%A0%E4%B8%8E%E6%97%85%E7%A8%8B%E5%AD%A6%E4%B9%A0"><span class="toc-number">2.2.1.</span> <span class="toc-text">1.2.1 捷径学习与旅程学习</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-2-%E9%95%BF%E6%80%9D%E7%BB%B4%E8%B5%B7%E6%95%88%E5%8E%9F%E5%9B%A0"><span class="toc-number">2.2.2.</span> <span class="toc-text">1.2.2 长思维起效原因</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-3-%E9%95%BF%E6%80%9D%E7%BB%B4%E8%83%BD%E5%8A%9B%E5%8F%AF%E8%83%BD%E7%9A%84%E8%8E%B7%E5%BE%97%E6%96%B9%E5%BC%8F-1"><span class="toc-number">2.3.</span> <span class="toc-text">1.3 长思维能力可能的获得方式-1</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3-1-%E5%A6%82%E4%BD%95%E6%9E%84%E5%BB%BA%E9%95%BF%E6%80%9D%E7%BB%B4%E6%95%B0%E6%8D%AE"><span class="toc-number">2.3.1.</span> <span class="toc-text">1.3.1 如何构建长思维数据</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3-2-%E5%A5%96%E5%8A%B1%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95%E6%9E%84%E5%BB%BA"><span class="toc-number">2.3.2.</span> <span class="toc-text">1.3.2 奖励模型如何构建</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3-3-%E5%A6%82%E4%BD%95%E6%9E%84%E5%BB%BA%E6%8E%A8%E7%90%86%E6%A0%91%EF%BC%9F"><span class="toc-number">2.3.3.</span> <span class="toc-text">1.3.3 如何构建推理树？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3-4-%E5%A6%82%E4%BD%95%E4%BB%8E%E6%8E%A8%E7%90%86%E6%A0%91%E4%B8%AD%E6%8E%A8%E5%AF%BC%E5%87%BA%E9%95%BF%E6%80%9D%E7%BB%B4%EF%BC%9F"><span class="toc-number">2.3.4.</span> <span class="toc-text">1.3.4 如何从推理树中推导出长思维？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3-5-%E9%95%BF%E6%80%9D%E7%BB%B4%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83"><span class="toc-number">2.3.5.</span> <span class="toc-text">1.3.5 长思维模型训练</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3-6-AI%E5%92%8C%E4%BA%BA%E7%B1%BB%E5%8D%8F%E5%90%8C%E6%A0%87%E6%B3%A8%E7%AD%96%E7%95%A5"><span class="toc-number">2.3.6.</span> <span class="toc-text">1.3.6 AI和人类协同标注策略</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-4-%E9%95%BF%E6%80%9D%E7%BB%B4%E8%83%BD%E5%8A%9B%E5%8F%AF%E8%83%BD%E7%9A%84%E8%8E%B7%E5%BE%97%E6%96%B9%E5%BC%8F-2"><span class="toc-number">2.4.</span> <span class="toc-text">1.4 长思维能力可能的获得方式-2</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-4-1-%E7%8A%B6%E6%80%81%E7%A9%BA%E9%97%B4"><span class="toc-number">2.4.1.</span> <span class="toc-text">1.4.1 状态空间</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-4-2-%E8%A1%8C%E4%B8%BA%E7%A9%BA%E9%97%B4"><span class="toc-number">2.4.2.</span> <span class="toc-text">1.4.2 行为空间</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-4-3-%E5%A5%96%E5%8A%B1%E6%A8%A1%E5%9E%8B"><span class="toc-number">2.4.3.</span> <span class="toc-text">1.4.3 奖励模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-4-4-%E8%AE%BE%E6%83%B3%E7%9A%84%E6%A8%A1%E5%9E%8B%E7%BB%93%E6%9E%84"><span class="toc-number">2.4.4.</span> <span class="toc-text">1.4.4 设想的模型结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-4-5-%E8%92%99%E7%89%B9%E5%8D%A1%E6%B4%9B%E6%A0%91MCST%E6%A0%91%E6%90%9C%E7%B4%A2"><span class="toc-number">2.4.5.</span> <span class="toc-text">1.4.5 蒙特卡洛树MCST树搜索</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-5-%E9%95%BF%E6%80%9D%E7%BB%B4%E8%83%BD%E5%8A%9B%E5%8F%AF%E8%83%BD%E7%9A%84%E8%8E%B7%E5%BE%97%E6%96%B9%E5%BC%8F-3"><span class="toc-number">2.5.</span> <span class="toc-text">1.5 长思维能力可能的获得方式-3</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E3%80%81-%E5%85%B6%E4%BB%96%EF%BC%9A%E5%BE%AE%E8%BD%AF-%E5%85%B3%E9%94%AE%E8%AE%A1%E5%88%92%E6%AD%A5%E9%AA%A4%E5%AD%A6%E4%B9%A0"><span class="toc-number">3.</span> <span class="toc-text">三、 其他：微软-关键计划步骤学习</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-%E8%AE%A1%E5%88%92%E6%90%9C%E7%B4%A2"><span class="toc-number">3.1.</span> <span class="toc-text">2.1 计划搜索</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-%E5%85%B3%E9%94%AE%E8%AE%A1%E5%88%92%E6%AD%A5%E9%AA%A4%E5%AD%A6%E4%B9%A0%EF%BC%88Step-APO%EF%BC%89"><span class="toc-number">3.1.1.</span> <span class="toc-text">2.2 关键计划步骤学习（Step-APO）</span></a></li></ol></li></ol></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        OpenaiO1
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">Macvh</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2024-10-25T08:58:50.000Z" class="dt-published" itemprop="datePublished">2024-10-25</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%9B%B8%E5%85%B3/">大模型相关</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B/" rel="tag">大模型</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h1 id="一、结论"><a href="#一、结论" class="headerlink" title="一、结论"></a>一、结论</h1><p><strong>OpenAI o1的核心特点</strong>：具有自我反思与错误修正的能力。</p>
+<ol>
+<li><strong>可能的训练数据</strong>：&lt;问题，思考过程（包括思考过程中出现的错误及错误修正过程），答案&gt;，关键点是思考过程<strong>要求包含解决方案的捷径，还包括试错、反思和回溯的完整探索过程。数据构建方法</strong>：<ol>
+<li><strong>人类标注：</strong>由人类全面地记录真实解决推理任务的过程。<strong>见1.3.6节</strong></li>
+<li><strong>多智能方法</strong>：一个智能体作为策略模型，进行推理，另一个智能体作为评论模型，指示策略模型是否应该继续当前推理或执行回溯等行为，获得数据。</li>
+<li><strong>构建推理树</strong>：利用单步推理策略模型，生成包含正确推理节点和错误推理节点的树结构推理过程，采样各类推理路径，获得数据。<strong>见1.3.2、1.3.3、1.3.4节。</strong></li>
+<li><strong>其他：</strong>代码COT数据、数学COT数据反响生成、合成数据等。</li>
+</ol>
+</li>
+<li><strong>可能的学习方法</strong>：<ol>
+<li><strong>以SFT为核心：</strong>先用只包含正确思考路径推理数据SFT模型，后使用包含错误、反思、修正、回溯的推理数据SFT模型，最后使用DPO通过正确响应和错误响应训练模型。<strong>见1.3.5节</strong></li>
+<li><strong>以RL为核心：</strong><ol>
+<li><strong>类AlphaZero方式：见1.4节</strong><ol>
+<li><strong>模型结构：</strong>融合LLM和RL模型，同时包含训练策略网络（输出各思考策略概率）和价值网络（输出通向正确答案概率）以及本体LLM网络（输出COT Tokens）。</li>
+<li><strong>RL模型训练：</strong>以单步思考步骤为行动（包括反思、错误修正等），使用MCST树搜索推理路径，利用结果奖励模型对推理结果打分，针对走到答案的所有中间状态构造数据，训练策略网络和价值网络。</li>
+<li><strong>LLM模型训练：</strong>同时可利用过程奖励模型对思考步骤打分，利用PPO训练LLM模型，从而使得模型获得反思与修正的推理能力。</li>
+</ol>
+</li>
+<li><strong>Self-Play方式：</strong>使用Self-play生产数据，结合多智能体对抗和博弈的思想，使用Generator-Verifier自博弈的方式，不断迭代模型，使得模型具有更强的推理能力。<strong>见1.5节</strong></li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+<h1 id="二、O1可能的技术细节"><a href="#二、O1可能的技术细节" class="headerlink" title="二、O1可能的技术细节"></a>二、O1可能的技术细节</h1><h2 id="1-1-O1的思维链"><a href="#1-1-O1的思维链" class="headerlink" title="1.1 O1的思维链"></a>1.1 O1的思维链</h2><p>表1是基于OpenAI提供的O1思想示例的详细分析创建的，其中包括解决复杂任务的八个推理步骤或“思想”的实例。这些示例通过仔细检查，提取相关的特征，如标记数、行数和关键词。这些示例被分类到不同的问题类型中，每种类型都与难度级别相关，从简单的英语阅读理解到复杂的多步数学推理任务。主要结论如下：</p>
+<ol>
+<li>随着难度的增加，<strong>响应长度（包括标记数和行数）倾向于成比例增长。这表明更高难度的任务涉及更多的推理步骤。</strong></li>
+<li>像“考虑”、“如果”和“可能”这类词在更复杂的问题中出现频繁，<strong>表明模型在探索多条解决路径</strong>。像“等待”和“或者”这样的关键词则<strong>表明模型具备反思和自我纠正的能力</strong>，显示出更深层次的非线性推理过程。</li>
+</ol>
+<p><img src="/2023/12/28/LlmIllusion/ge.png"></p>
+<p><strong>表1:OpenAI O1 不同领域思维过程中各种实例的统计摘要</strong></p>
+<p>同时仔细审查了OpenAI的O1在解决数学问题时所采用的推理过程。通过他们的详细检查，提取了反映O1如何处理和推理复杂方程的底层思维链。这个结构化的思维图如图5所示，O1的思考有以下特点：</p>
+<ol>
+<li><strong>迭代式解决问题：</strong>模型首先定义函数，并逐步探索相关的表达式，将复杂的方程分解成更简单的组成部分，反映了结构化和系统化的方法。</li>
+<li><strong>关键思想指标：</strong>使用诸如“因此”用于结论，“另外”用于探索不同路径，“等待”用于反思，以及“让我计算”用于过渡到计算等术语，突出了模型的推理阶段。</li>
+<li><strong>递归和反思方法</strong>：模型经常重新评估并验证中间结果，使用递归结构确保一致性，这在严格的数学推理中是典型的。</li>
+<li><strong>假设的探索：</strong>模型测试不同的假设，并随着收集更多信息而调整其方法，展示了其在推理过程中的灵活性。</li>
+<li><strong>结论和验证：</strong>最后，模型解决方程并验证结果，强调了在完成之前验证结论的重要性。</li>
+</ol>
+<p><strong>核心是O1具有自我反思与错误修正的能力。</strong></p>
+<p><img src="/2023/12/28/LlmIllusion/ge1.png"></p>
+<p><strong>图1: OpenAI O1 在数学推理中的思维结构。</strong></p>
+<h2 id="1-2-为何O1的这种长思考方式会有效？"><a href="#1-2-为何O1的这种长思考方式会有效？" class="headerlink" title="1.2 为何O1的这种长思考方式会有效？"></a>1.2 为何O1的这种长思考方式会有效？</h2><h3 id="1-2-1-捷径学习与旅程学习"><a href="#1-2-1-捷径学习与旅程学习" class="headerlink" title="1.2.1 捷径学习与旅程学习"></a>1.2.1 捷径学习与旅程学习</h3><p><strong>捷径学习关键特征定义：</strong></p>
+<ol>
+<li>快速结果导向：它强调在短时间内实现特定的性能指标或完成特定的任务。</li>
+<li>大量数据依赖：性能提升通常依赖于增加训练数据的量，而不是增强学习算法本身。</li>
+<li>有限泛化能力：在训练数据分布之外的场景中，性能可能会急剧恶化。</li>
+<li>缺乏自我纠正：这些系统通常缺乏识别和纠正自身错误的能力。尽管捷径学习在人工智能领域推动了许多进步，但它难以产生真正智能且可靠的AI系统，能够处理现实世界挑战的复杂性。</li>
+</ol>
+<p><strong>旅程学习：</strong>“旅程学习”鼓励模型不仅学习解决方案的捷径，还包括试错、反思和回溯的完整探索过程。该方法通过模拟人类的认知过程，使AI系统能够持续学习、反思、回溯和调整，从而有希望使得模型表现出更高的智能水平。</p>
+<p><img src="/2023/12/28/LlmIllusion/ge2.png"></p>
+<p><strong>图5:旅程学习范式及其表现</strong></p>
+<h3 id="1-2-2-长思维起效原因"><a href="#1-2-2-长思维起效原因" class="headerlink" title="1.2.2 长思维起效原因"></a><strong>1.2.2 长思维起效原因</strong></h3><p>O1的长思考方法的显著成功可以归因于旅程学习。与传统的捷径学习不同，旅程学习允许<strong>模型探索整个决策轨迹</strong>，模仿人类的问题解决过程。这种全面的探索使O1能够考虑多种解决方案路径，<strong>从错误中学习，并理解完整的解决问题过程</strong>。通过体验正确和错误的路径，模型发展出强大的错误处理和自我修正能力，增强了其适应新挑战的能力。<strong>这种方法培养了对问题领域的深入理解，不仅仅是知道正确答案，而是理解为什么以及如何得出答案</strong>。学习旅程过程紧密模拟人类认知过程，包括试错、反思和调整。这导致了可解释性的增强，因为O1可以提供详细的解决方案步骤并解释其推理过程，包括它如何从错误中恢复过来。因此，O1的长思考过程，基于学习旅程，不仅仅是关于扩展的计算时间，而是代表了彻底的、类人的推理探索。这种方法论使O1能够处理更复杂的问题，提供更可靠和可解释的答案，并在面对新挑战时展示更大的适应性，从而解释其在各种任务中的卓越表现。</p>
+<ol>
+<li>会纠正，缓解错误累计问题；</li>
+<li>会反思，获得更多的信息；</li>
+</ol>
+<h2 id="1-3-长思维能力可能的获得方式-1"><a href="#1-3-长思维能力可能的获得方式-1" class="headerlink" title="1.3 长思维能力可能的获得方式-1"></a>1.3 长思维能力可能的获得方式-1</h2><h3 id="1-3-1-如何构建长思维数据"><a href="#1-3-1-如何构建长思维数据" class="headerlink" title="1.3.1 如何构建长思维数据"></a>1.3.1 如何构建长思维数据</h3><p>其中通过反思和回溯等行动构建长思维是旅程学习的关键元素。探索了几种实现这一目标的方法。</p>
+<ul>
+<li><strong>尝试1：基于LLM和奖励的树搜索</strong>：根据对长思维的观察，其最显著的特征是在推理产生错误时或遇到冗余的推理步骤时尝试反思和回溯。这类似于在推理树上搜索问题的解决方案，在错误节点处回溯，直到找到正确的解决路径。为实现这一点，需要构建一棵推理树，其中根节点代表问题，其他每个节点代表一个推理步骤。从根到任何节点的路径代表从问题到该结论的推理过程。此外，回溯和反思必须基于错误的推理步骤，这需要一个更细粒度的奖励模型（即过程级）来指示树中每个节点的正确性。通过在具有过程级奖励的推理树上执行搜索算法，可以将错误步骤整合到思维链中，从而构建包含回溯和反思等行为的长思维。</li>
+<li><strong>尝试2：提议-批判循环</strong>：尝试 1 通过基于预定义规则在树上执行搜索来构建长思维，但这限制了回溯和反思等行为的自由度。因此，团队尝试让模型选择自己当前的行为。团队构建了一个提议 - 批评循环，其中为模型预定义了一些可能的行为（即继续、回溯、反思、终止），并让模型自身选择行为来构建推理树。如果树没有达到最终答案，可以将这个负面信号告知模型，引导它反思和纠正其方法。</li>
+<li><strong>尝试3：多智能体方法</strong>：基于推理树构建长思维存在几个挑战，包括存在许多冗余的无效节点，以及存在不依赖于反思行为的推理步骤，从而引起构建的长思维逻辑不一致。为解决这个问题，团队设计了一个利用多智能体辩论的算法，其中一个智能体充当策略模型，持续推理，而另一个智能体充当评论模型，指示策略模型是否应该继续当前推理或执行回溯等行为。两个智能体进行持续对话，在找到正确答案时自然构建长思维数据集。</li>
+<li><strong>尝试4：人类思维过程标注</strong>：当人类处理推理问题时，他们通常不会不断地向前推理直到解决问题或失败；相反，他们在无法继续时会反思、回溯和重写推理。这种行为与长思维的特征高度一致。因此，可以忠实且全面地记录人类解决推理任务的过程，从而产生高质量的长思维。</li>
+</ul>
+<h3 id="1-3-2-奖励模型如何构建"><a href="#1-3-2-奖励模型如何构建" class="headerlink" title="1.3.2 奖励模型如何构建"></a>1.3.2 奖励模型如何构建</h3><p>使用奖励模型的第一步是定义粒度。团队的目标不仅仅是关注最终结果，而是专门提高 LLMs 在反思、回溯和相关认知过程方面的能力。因此，需要将评估粒度定义在步骤层面。具体来说，团队使用来自 Abel 的微调数据，通过行号使解决方案变得清晰可辨。微调数据长这样：</p>
+<p>Abel输出demo：</p>
+<p><img src="/2023/12/28/LlmIllusion/ge3.png"></p>
+<p>实现奖励模型的过程可以使用开源模型或是调用闭源模型的 api。团队比较了不同奖励模型在 PRM800K 和 MR-GSM8K 子集上的元评估表现。如下表格展示了结果，其中，o1-mini 在不同数据集上表现最佳，证明其是一个良好的奖励模型。</p>
+<p><img src="/2023/12/28/LlmIllusion/ge4.png"></p>
+<h3 id="1-3-3-如何构建推理树？"><a href="#1-3-3-如何构建推理树？" class="headerlink" title="1.3.3 如何构建推理树？"></a>1.3.3 <strong>如何构建推理树？</strong></h3><p>构建推理树需要一个能够执行单步推理的策略模型。给定一个问题及其相应的最终答案，策略模型从问题作为根节点开始，不断向树中添加新节点。它首先生成 w 个可能的第一步推理步骤作为根节点的子节点。然后，它迭代地进行前向推理，为每个当前节点（如第一步推理）生成 w 个可能的后续推理步骤作为该节点的子节点。这个过程重复进行，直到达到预设的最大深度或所有叶节点达到最终答案。</p>
+<ol>
+<li><strong>策略模型和步骤分段</strong> 构建推理树需要清晰定义推理步骤。为此，团队采用 Abel 提出的数据格式，将数学问题解决方案转化为具有清晰步骤的形式，将答案分成多行，每行以行号开始，并包含该行内的推理。因此，使用 Abel 数据集对 DeepSeekMath-7B-Base 进行微调，得到 Abel-DSMath，作为策略模型。在这种特定格式数据上微调的模型可以方便地控制单个推理步骤的生成。</li>
+<li><strong>奖励模型和剪枝</strong> 上述提出的树生成算法计算成本高昂。当设置后续推理步骤数目为 3 和深度为 10 时，最后一次迭代需要生成 3 的 10 次方个推理步骤。因此，使用奖励模型来剪除错误的推理步骤，提高操作效率。具体来说，团队采用束搜索，在每次迭代中只选择少量候选项保留到下一轮。根据使用的奖励模型，剪枝实现的细节有所不同。团队尝试了两个奖励模型：math-shepherd 和 o1-mini。</li>
+<li>Math-shepherd 为每个步骤提供一个介于 0 和 1 之间的实数，表示当前步骤正确的概率。在树生成的每次迭代中，对所有推理步骤进行评分，并选择得分最高的前 K 个进入下一次迭代。这将总生成次数进行剪枝。然而，math-shepherd 在评估困难问题的推理步骤时存在困难，需要一个更强大的奖励模型，能够为每个步骤提供高准确度的正确性指示。因此，最终使用 o1-mini 为每个步骤提供奖励，直接指示每个推理步骤是否正确。此时，在树生成的每次迭代中，利用来自 o1-mini 的奖励，选择最多 K 个正确的推理步骤进入下一次迭代。</li>
+</ol>
+<h3 id="1-3-4-如何从推理树中推导出长思维？"><a href="#1-3-4-如何从推理树中推导出长思维？" class="headerlink" title="1.3.4 如何从推理树中推导出长思维？"></a>1.3.4 <strong>如何从推理树中推导出长思维？</strong></h3><p>一旦构建了推理树，目标就变为探索如何从推理树转换为包含试错过程的长思维。在该团队的框架中，推理树的每个节点都被奖励模型标注，指示该步骤是否正确或错误。具体的合成步骤如下：</p>
+<ul>
+<li><strong>从推理树构建捷径</strong> 首先从推理树构建捷径，其中只包括正确答案和有效的中间步骤。从代表问题的根节点开始，找出通向正确答案叶节点的路径。如果有多个正确答案节点，则建立多条正确路径。</li>
+<li><strong>遍历推理树</strong> 为了得到长思维，采用深度优先搜索（DFS）遍历树。这种遍历按 DFS 顺序构建路径，记录从根问题节点到正确答案叶节点的每一步，同时包括任何被标记为错误的节点的推理。DFS 的挑战在于它探索了庞大的搜索空间，产生了大量可能无法得到正确解决方案的试错路径。为了简化这一初始探索，团队还引入了具体的约束来缓解由于遍历路径过长导致的合成数据的复杂性。首先，根据节点是否位于正确路径（即捷径）上来标记树中的所有节点。遍历遵循以下规则：</li>
+<li><strong>正确路径上的节点：</strong>DFS 遇到正确路径上的节点时，它可能会探索导致错误结果的子节点，从而模拟试错的过程。一旦这个节点到达叶节点并被确定为错误，算法就会回溯并切换到正确的路径继续遍历。</li>
+<li><strong>不在正确路径上的节点：</strong>随机选择一个子节点进行探索，并不产生试错的分支。</li>
+</ul>
+<p>为进一步简化过程，应用了一个额外的约束：正确路径上的每个节点最多允许 K 次试错 —— 一次在错误路径上的试错和一次在正确路径上的探索。 这些约束确保 DFS 遍历专注有意义的试错探索，同时避免过度探索错误路径。在未来的实验中，计划移除或调整这些约束，以研究试错路径长度与最终模型性能之间的关系。</p>
+<ul>
+<li><strong>从遍历路径得到长思维</strong> 生成遍历路径并将推理附加到错误节点后，通过连接路径中的所有步骤来构建长思维，其中还包含了每个错误步骤的推理。然而，初步实验表明，使用这个形式的长思维数据来训练模型的性能不佳。为解决这个问题，团队尝试使用 GPT-4o 来修改草稿。GPT-4o 在保留所有推理步骤（包括错误步骤、反思和修正）的同时，增强了思维过程的连贯性和流畅性。这种方法确保最终的长思维不仅准确，而且自然流畅，模拟了包含正确和错误步骤的人类问题解决过程。</li>
+</ul>
+<h3 id="1-3-5-长思维模型训练"><a href="#1-3-5-长思维模型训练" class="headerlink" title="1.3.5 长思维模型训练"></a>1.3.5 长思维模型训练</h3><p>上交提出长思维模型训练方式，方法如下：</p>
+<ol>
+<li><strong>阶段1：监督微调（SFT）：</strong>SFT过程包括两个阶段<ol>
+<li><strong>捷径学习：</strong>在这一初始阶段，专注于通过仅包含正确中间步骤和最终正确答案的响应来微调模型。使用Abel数据集（包含12万示例）和PRM800K数据集微调Deepseek-math-7b-base。对于PRM800K中的每个问题，只使用一个正确的逐步解答，丢弃未得出最终答案的响应。最终，为微调收集了6998个示例。在这一阶段，对每个数据集进行一次训练，主要目的是使模型熟悉所需的响应格式。</li>
+<li><strong>旅程学习：</strong>在第二阶段，进一步使用他们构建的长思维微调在第一阶段微调的SFT模型，这些长思维包含327个示例。此阶段旨在增强模型检测错误、进行反思、执行修正和回溯的能力。通过在包含正确推理路径和错误尝试的长思维上训练，希望模型能更深入地理解长推理链的复杂性。作为对比，还在从相同推理树生成的捷径上微调模型，这同样由327个示例组成。长思维SFT和捷径SFT设置都在这327个示例上进行了三轮训练。</li>
+</ol>
+</li>
+<li><strong>阶段2：直接偏好学习（DPO）</strong>：在此阶段，他们从MATH训练集生成每个问题的20个响应，该数据集是从PRM800K重新划分的，包含12,000个示例。使用nucleus采样，设置top_p&#x3D;0.95和温度T&#x3D;0.7。然后根据最终答案的正确性将这些20个响应分为正面和负面响应。从中随机选择5个正面响应和5个负面响应，创建5对偏好对。通过DPO损失训练模型，让它从正确和错误答案的比较中学习。</li>
+</ol>
+<h3 id="1-3-6-AI和人类协同标注策略"><a href="#1-3-6-AI和人类协同标注策略" class="headerlink" title="1.3.6 AI和人类协同标注策略"></a>1.3.6 AI和人类协同标注策略</h3><p>团队开发了一种人类和 AI 协作的数据标注流程，用于生成基于 MATH 数据集的高质量、长文本推理数据。通过这个流程，我们将短短几行人类标注的解题方案扩展为包含数千个 token 的、符合 “旅程学习” 范式的详细推理过程。在构建流程的过程中，我们发现了下面几种有效的标注技巧：</p>
+<ul>
+<li><strong>完整的思维过程</strong>：标注者不必详细记录每一个想到的词语，但必须记录每一个尝试、反思、联想和修正的过程。这些发散的认知路径在日常思考中可能并未被表达成文字，甚至没有被显式认知。然而，捕捉这些思维转变以及背后的原因是至关重要的。这种规划和理解认知转换的能力是大语言模型从我们的数据中必须学习的核心技能。</li>
+<li><strong>补充解释常识</strong>：人类在用语中经常省略一些可以从上下文中推断的信息，比如对前述公式的引用，或是对广为人知的理论的应用。然而，当大语言模型尝试解读人类标注时，这种省略可能导致幻觉。因此，高质量的数据必须包括对常识性知识的明确解释，以防止大模型的误解。</li>
+</ul>
+<p>遵循以上两个关键要素，人类专家即可完成数据标注，这些数据精简但准确，非常利于大模型做进一步增强。下一阶段，通过设计复杂的提示词，通过大语言模型实现了数据扩展和增强。提示词包含以下关键点：</p>
+<ul>
+<li><strong>数据颗粒度的增强</strong>：提示词强调将问题解决过程分解为更细小的步骤。通过将过程拆解成细粒度且易于理解的步骤块，大语言模型能更好地掌握和内化每个概念，确保在每个阶段都有深入的理解。</li>
+<li><strong>逐步推理</strong>：提示词控制大语言模型需频繁暂停，反思已知信息或提出下一步的操作。这种停顿模仿了学生在思考问题时的自然过程，帮助他们保持参与感和对推理过程的连接感，而不仅仅是被动地遵循指令。</li>
+<li><strong>探索者视角</strong>：与直接呈现答案不同，大语言模型被鼓励以探索的语气进行推理，即假设自己是第一次思考这个问题。这种方式可以激发某种程度的 “好奇心”，鼓励模型批判性思考，使他们感觉自己是学习过程的一部分，而不是简单地接收信息。</li>
+</ul>
+<h2 id="1-4-长思维能力可能的获得方式-2"><a href="#1-4-长思维能力可能的获得方式-2" class="headerlink" title="1.4 长思维能力可能的获得方式-2"></a>1.4 长思维能力可能的获得方式-2</h2><p>基础“&lt;问题，思考过程（包括思考过程中出现的错误及错误修正过程），答案&gt;”数据的构建方式与1.3节阐述基本一致，主要区别为训练部分，重点分析RL模块，从RL的关键要素：状态空间（State Space）、行为空间（Action Space）、奖励模型（Reward Model）叙述</p>
+<h3 id="1-4-1-状态空间"><a href="#1-4-1-状态空间" class="headerlink" title="1.4.1 状态空间"></a>1.4.1 状态空间</h3><p><img src="/2023/12/28/LlmIllusion/ge5.png"></p>
+<p>o1的状态空间可能是由Token序列组成的连续状态空间。O1的状态空间和图像是类似的（参考上图），可以把一个Token片段类比RL打游戏对应的某个图片输入，看成由Token序列组成的连续状态空间，经过o1的LLM+RL神经网络映射到某个行为空间中的行为。</p>
+<h3 id="1-4-2-行为空间"><a href="#1-4-2-行为空间" class="headerlink" title="1.4.2 行为空间"></a>1.4.2 行为空间</h3><p><img src="/2023/12/28/LlmIllusion/ge6.png"></p>
+<p>根据推测一个合理的方法是归纳出人类思考复杂问题的隐含的“思考因子”,以此作为候选的行为集合，比如：“拆解问题”、“复述目标”、“检查结果”、“修正错误”、“提出假设”等等，总体数量应该不会太多，即使划分得细致一些的话，估计也就几十到上百种。而针对每个具体的“思考因子”，可以产生符合对应分布概率的Token片段，比如行为若是“提出假设”因子，则生成“Alternatively”这个Token的概率就比较大（通过PPO从训练数据里学到的）。那么，Hidden COT片段很可能其真实面貌是长这样的：</p>
+<p><img src="/2023/12/28/LlmIllusion/ge7.png"></p>
+<h3 id="1-4-3-奖励模型"><a href="#1-4-3-奖励模型" class="headerlink" title="1.4.3 奖励模型"></a>1.4.3 奖励模型</h3><p><img src="/2023/12/28/LlmIllusion/ge8.png"></p>
+<p>常用奖励模型有两种：结果奖励模型（ORM，Output Reward Model）和过程奖励模型（PRM，Process Reward Model ）。</p>
+<ul>
+<li><strong>ORM（结果奖励模型）</strong>：该模型侧重于对最终结果的评估，而忽略中间推导过程的细节。以Hidden COT为例，仅当o1完整且准确地完成Hidden COT时，ORM才会输出奖励信号。模型答案与标准答案一致，则奖励1分；若答案错误，则扣除1分。这种机制的显著优势在于反馈信号的准确性，特别适用于数学题等具有明确对错标准的任务，从而确保反馈的精准无误。然而，其缺点在于反馈的稀疏性，即无论中间推导过程有多复杂，模型都只能获得一个最终的反馈信号，这在一定程度上限制了模型对错误定位与纠正的能力。</li>
+<li><strong>PRM（过程奖励模型）</strong>：与ORM不同，PRM能够针对推导过程中的每一步骤提供反馈信号。这使得模型在出现错误时能够迅速定位具体问题所在，无需等待整个推导过程的完成。这种模型的核心特点在于其丰富的反馈信号，有效提升了模型的训练效率和准确性。然而，PRM的实施难度较高，因为它依赖于大量的逐步标注数据。例如，OpenAI的“Let’s Verify Step by Step”项目就通过人工标注了80万个数学题的中间推导步骤，以支持PRM的训练。尽管这种方法取得了显著成效并证明了PRM相对于ORM的优势，但其高昂的训练数据制作成本仍是不可忽视的问题。</li>
+</ul>
+<p>通过上述优化表达，我们更加清晰地阐述了ORM和PRM两种模型的特点、优势以及面临的挑战，为相关领域的研究人员提供了更为详尽的参考信息。</p>
+<p>而PRM的训练数据构建有许多方法、细节，如1.3节奖励模型构建方法等，这边不再赘述。</p>
+<h3 id="1-4-4-设想的模型结构"><a href="#1-4-4-设想的模型结构" class="headerlink" title="1.4.4 设想的模型结构"></a>1.4.4 设想的模型结构</h3><p><img src="/2023/12/28/LlmIllusion/ge9.png"></p>
+<p>根据前文的分析，o1的模型架构可能如上图，该结构以Transformer为基础的LLM模型（可选用Dense或MOE配置，其中mini版本推荐Dense结构）为核心。在此框架内，模型接收“问题+已生成的部分Hidden COT”（即当前的连续Token序列状态）作为输入，并通过GPT网络对当前状态进行编码。</p>
+<p>在LLM的输出Head部分，有两个子结构：</p>
+<ol>
+<li><strong>一是用于常规的LLM预测下一个Token，这与传统的LLM功能一致；</strong></li>
+<li><strong>二是在Head之上构建的RL模型结构，该设计借鉴了AlphaZero的思想，实现了一个网络输出两个结果的功能。</strong></li>
+</ol>
+<p>具体来说，采用FFN网络结构，它一方面输出<strong>策略网络P</strong>的结果，代表在当前状态下，下一步“思考因子”Action的分布概率。某个“思考因子”的概率越高，意味着下一步这个Action被选择执行的可能性越大；另一方面，该网络还会输出<strong>价值网络V</strong>的结果，这代表了当前状态通向最终正确答案的概率大小。概率越大，说明当前状态的质量越高，也即目前已输出的这部分Hidden COT的整体质量较好。</p>
+<p>然而，当Hidden COT处于某个特定状态时，尽管能够通过网络知晓下一步应采取的动作，以及当前状态通向成功答案的概率，但仍需解决一个问题：即在已知下一步“思考因子”行为后，如何生成与之对应的Hidden COT的一系列Tokens。可以利用LLM head之上的LLM部分来持续输出后续的Tokens。在有人工数据进行训练的情况下，可以通过PPO算法来增加对应Token的输出概率。值得注意的是，在输出这些后续Token的过程中，并不考虑RL的输出结果，而是直到LLM输出完毕后，再去判断RL的输出以选择下一步的动作。通过这一过程，结合LLM和RL的输出，Hidden COT的模型就能够顺利运转起来。</p>
+<p>此外，根据前文的分析，o1有很大可能性会使用过程奖励模型PRM，并且它可能由多个模型共同构成。基于这两个约束条件，可以对上述模型结构进行了进一步的改进：在已知下一步的“思考因子”后，不再使用主模型来生成后续的Tokens。为了提高后续生成的COT的质量，采用了Best-of-N Sampling的思路，<strong>即通过多个复制的Reverse-o1模型（这些副本可以设置不同的温度参数，以增加输出的多样性）来各自给出一个Token序列。</strong>然后，利用离线训练好的PRM作为评委对这些序列进行打分，并选择得分最高的Token序列作为本次“思考因子”后续的输出Tokens。在选出最佳内容后，可以将其同步给主模型，主模型通过执行类似Prefill的操作来同步输出这一最佳内容，并开始下一轮的输出。通过这种方式，可以显著提升生成的Token序列的质量。</p>
+<h3 id="1-4-5-蒙特卡洛树MCST树搜索"><a href="#1-4-5-蒙特卡洛树MCST树搜索" class="headerlink" title="1.4.5 蒙特卡洛树MCST树搜索"></a>1.4.5 蒙特卡洛树MCST树搜索</h3><p><img src="/2023/12/28/LlmIllusion/ge10.png"></p>
+<ol>
+<li><strong>问题输入与MCST树初始化</strong><ul>
+<li>用户输入问题后，模型启动MCST（主体结构）进行问题的解答流程。</li>
+<li>MCST树开始构建，准备对每个可能的“思考因子”进行搜索。</li>
+</ul>
+</li>
+<li><strong>策略网络与价值网络指引搜索</strong><ul>
+<li>在搜索过程中，模型利用策略网络P和价值网络V来快速寻找最优搜索路径。</li>
+<li>策略网络P提供行动建议，而价值网络V评估每个状态或行动的价值。</li>
+</ul>
+</li>
+<li><strong>确定“思考因子”的概率分布</strong><ul>
+<li>经过搜索，模型得到所有“思考因子”的概率分布pai。这个概率数值表示采取某类思考通向正确答案的可能性。</li>
+<li>概率越高的“思考因子”，代表其更有可能引导至正确答案。</li>
+</ul>
+</li>
+<li><strong>选择最优“思考因子”并生成COT Tokens</strong><ul>
+<li>模型选择概率最大的“思考因子”作为当前状态下的最优行为。</li>
+<li>利用Reverse-o1技术，针对这个最优行为生成COT Tokens片段。这些Tokens是思考过程中的关键信息片段。</li>
+</ul>
+</li>
+<li><strong>状态更新与循环搜索</strong><ul>
+<li>将生成的COT Tokens片段并入用户问题，形成新的状态，为下一轮搜索做准备。</li>
+<li>模型不断重复上述搜索过程，直到产生问题的答案。</li>
+</ul>
+</li>
+<li><strong>答案验证与Output Reward赋予</strong><ul>
+<li>生成的答案与标准答案进行对比，验证其正确性。</li>
+<li>根据答案的正确性，模型赋予对应的Output Reward（正确为1，错误为-1）。</li>
+</ul>
+</li>
+<li><strong>训练策略网络与价值网络：</strong><ul>
+<li>利用搜索过程中收集的数据（包括状态、行为、Reward等），模型训练策略网络P和价值网络V。</li>
+<li>策略网络的学习目标是逼近MCST搜索到的行为概率分布π，而价值网络的学习目标是准确预测Output Reward。</li>
+</ul>
+</li>
+<li><strong>PPO调整LLM模型参数</strong><ul>
+<li>对于搜索过程中每个被选中的“思考因子”，通过Best-of-N Sampling得到的对应Hidden COT tokens序列，可以利用PPO（Proximal Policy Optimization）算法来调整LLM（Large Language Model）的模型参数。</li>
+<li>这一步骤的目的是使LLM在遇到类似的“思考因子”时，能够提高相关Tokens的生成概率，从而优化整体的思考过程。</li>
+</ul>
+</li>
+</ol>
+<h2 id="1-5-长思维能力可能的获得方式-3"><a href="#1-5-长思维能力可能的获得方式-3" class="headerlink" title="1.5 长思维能力可能的获得方式-3"></a>1.5 长思维能力可能的获得方式-3</h2><p><img src="/2023/12/28/LlmIllusion/ge11.png"></p>
+<p>核心为Self-play的方式产出推理数据，使用Generator-Verifier自博弈的方式Scaling到更强的性能，整体可能的实现方式如下：</p>
+<ol>
+<li><strong>模型系统架构</strong><ul>
+<li>首先，确定使用generator和verifier两个相互配合的模型。在部署时，这两个模型将组合成一个系统来共同完成任务。</li>
+</ul>
+</li>
+<li><strong>更新机制设计</strong><ul>
+<li>采用actor-critic的架构，并结合TD-error（时间差分误差）来更新generator和verifier模型。这种机制能够帮助模型更有效地学习和优化策略。具体来说，actor负责生成动作，而critic则评估动作的好坏，并提供TD-error来指导更新。</li>
+</ul>
+</li>
+<li><strong>Reward Model的设置与应用</strong><ul>
+<li><strong>设置</strong>：Reward Model可以直接利用稀疏的BT模型，以数值化的reward形式为verifier模型提供反馈。</li>
+<li><strong>应用</strong>：如果Reward Model能够掌握问题的真实答案（Ground Truth），那么它就可以被视作对环境的模拟或建模。这意味着，verifier可以通过与Reward Model的交互，了解到自己策略的真实效果，从而进行有针对性的调整。</li>
+</ul>
+</li>
+<li><strong>内外环设计</strong><ul>
+<li><strong>内环设计</strong>：由Generator和Verifier组成的self-play系统，它们之间通过纯自然语言进行交互。在这个内环中，Generator负责生成策略或动作，而Verifier则负责验证和评估这些策略或动作的有效性。这两个步骤（Generator step和Verifier step）可以根据具体需求进行灵活组合和调整。</li>
+<li><strong>外环设计</strong>：外环主要涉及Reward Model与整个Generator-Verifier系统的对抗。在这个过程中，Reward Model通过不断调整reward来引导系统朝着更好的方向发展，而Generator和Verifier则需要不断适应这些变化，以找到更优的策略。</li>
+</ul>
+</li>
+<li><strong>学习效率优化</strong><ul>
+<li>如果在学习过程中遇到效率低下的问题，可以考虑以下两种优化方法：<ul>
+<li><strong>课程学习：</strong>逐步增加学习任务的难度，以帮助模型从简单到复杂逐步掌握知识，提高学习效率。</li>
+<li><strong>分层强化学习：</strong>将学习任务分解为utterance level和token level两个层次，进行解耦学习。这种分层的方法可以让模型更加专注于每个层次的特定任务，从而提高整体的学习效果。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<h1 id="三、-其他：微软-关键计划步骤学习"><a href="#三、-其他：微软-关键计划步骤学习" class="headerlink" title="三、 其他：微软-关键计划步骤学习"></a>三、 其他：微软-关键计划步骤学习</h1><p>也有其他相似的长思维实现方式如下：</p>
+<h2 id="2-1-计划搜索"><a href="#2-1-计划搜索" class="headerlink" title="2.1 计划搜索"></a>2.1 计划搜索</h2><ol>
+<li><strong>高层次抽象计划</strong>：CPL提出了一种在高层次抽象计划的动作空间中进行搜索的新方法。</li>
+<li><strong>蒙特卡洛树搜索（MCTS）</strong>：通过MCTS探索多样化的计划步骤，生成高质量的计划步骤监督信号。</li>
+<li><strong>价值模型</strong>：在MCTS中使用价值模型评估每个部分推理路径的预期回报，帮助模型选择最优路径。</li>
+</ol>
+<p>CPL方法通过基于计划的蒙特卡洛树搜索（Plan-based MCTS）在高层次抽象计划的动作空间中进行搜索。具体来说，CPL逐步创建解决问题的计划，并最终给出完整的解答；MCTS迭代构建出计划树，并生成高质量的计划步骤监督信号。在MCTS中，研究员们使用价值模型来评估每个部分推理路径的预期回报，这使得模型在面对复杂推理任务时能够有效选择最优路径，最大限度地减少无效搜索的影响。通过这种方式，CPL帮助模型聚焦于推理过程中的重要决策，显著提升了模型的推理能力和泛化性。</p>
+<h3 id="2-2-关键计划步骤学习（Step-APO）"><a href="#2-2-关键计划步骤学习（Step-APO）" class="headerlink" title="2.2 关键计划步骤学习（Step-APO）"></a>2.2 关键计划步骤学习（Step-APO）</h3><ol>
+<li><strong>直接偏好优化（DPO）</strong>：Step-APO建立在DPO基础上，进一步结合了MCTS中获得的步骤级优势估计。</li>
+<li><strong>步骤级优势偏好优化</strong>：为每个推理步骤计算其相对于同层其他步骤的“优势值”，识别并强化关键步骤。</li>
+</ol>
+<p>Step-APO建立在直接偏好优化（DPO）的基础之上，进一步结合了MCTS中获得的步骤级优势估计。具体来说，Step-APO为每个推理步骤计算其相对于同层其他步骤的“优势值”。这种优势值通过比较不同步骤之间的偏好来识别出对最终推理结果至关重要的步骤，并赋予这些关键步骤更高的优化权重。通过这种方式，模型能够更好地识别并强化关键步骤，实现更高效的计划优化与泛化。这种方法不仅提高了模型的推理性能，特别是在跨领域任务中表现尤为明显。</p>
+<p><strong>参考内容：</strong></p>
+<p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=MzI1MzEwMzIwOQ==&mid=2247492068&idx=1&sn=d25e3c10c3e1b6c9a6295e4e78601b87&scene=21#wechat_redirect">https://mp.weixin.qq.com/s?__biz&#x3D;MzI1MzEwMzIwOQ&#x3D;&#x3D;&amp;mid&#x3D;2247492068&amp;idx&#x3D;1&amp;sn&#x3D;d25e3c10c3e1b6c9a6295e4e78601b87&amp;scene&#x3D;21#wechat_redirect</a></p>
+<p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=MzI1MzEwMzIwOQ==&mid=2247491826&idx=1&sn=7bbff5c5686afe0ae05fc37ef10aa001&scene=21#wechat_redirect">https://mp.weixin.qq.com/s?__biz&#x3D;MzI1MzEwMzIwOQ&#x3D;&#x3D;&amp;mid&#x3D;2247491826&amp;idx&#x3D;1&amp;sn&#x3D;7bbff5c5686afe0ae05fc37ef10aa001&amp;scene&#x3D;21#wechat_redirect</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/GAIR-NLP/O1-Journey/blob/main/resource/report.pdf">https://github.com/GAIR-NLP/O1-Journey/blob/main/resource/report.pdf</a></p>
+<p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/FzF7aOmHQXGeDU4KkZrPzg">https://mp.weixin.qq.com/s/FzF7aOmHQXGeDU4KkZrPzg</a></p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/about/">About</a></li>
+        
+          <li><a href="/archives/">Writing</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="http://github.com/probberechts">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E7%BB%93%E8%AE%BA"><span class="toc-number">1.</span> <span class="toc-text">一、结论</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81O1%E5%8F%AF%E8%83%BD%E7%9A%84%E6%8A%80%E6%9C%AF%E7%BB%86%E8%8A%82"><span class="toc-number">2.</span> <span class="toc-text">二、O1可能的技术细节</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-1-O1%E7%9A%84%E6%80%9D%E7%BB%B4%E9%93%BE"><span class="toc-number">2.1.</span> <span class="toc-text">1.1 O1的思维链</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-2-%E4%B8%BA%E4%BD%95O1%E7%9A%84%E8%BF%99%E7%A7%8D%E9%95%BF%E6%80%9D%E8%80%83%E6%96%B9%E5%BC%8F%E4%BC%9A%E6%9C%89%E6%95%88%EF%BC%9F"><span class="toc-number">2.2.</span> <span class="toc-text">1.2 为何O1的这种长思考方式会有效？</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-1-%E6%8D%B7%E5%BE%84%E5%AD%A6%E4%B9%A0%E4%B8%8E%E6%97%85%E7%A8%8B%E5%AD%A6%E4%B9%A0"><span class="toc-number">2.2.1.</span> <span class="toc-text">1.2.1 捷径学习与旅程学习</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-2-%E9%95%BF%E6%80%9D%E7%BB%B4%E8%B5%B7%E6%95%88%E5%8E%9F%E5%9B%A0"><span class="toc-number">2.2.2.</span> <span class="toc-text">1.2.2 长思维起效原因</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-3-%E9%95%BF%E6%80%9D%E7%BB%B4%E8%83%BD%E5%8A%9B%E5%8F%AF%E8%83%BD%E7%9A%84%E8%8E%B7%E5%BE%97%E6%96%B9%E5%BC%8F-1"><span class="toc-number">2.3.</span> <span class="toc-text">1.3 长思维能力可能的获得方式-1</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3-1-%E5%A6%82%E4%BD%95%E6%9E%84%E5%BB%BA%E9%95%BF%E6%80%9D%E7%BB%B4%E6%95%B0%E6%8D%AE"><span class="toc-number">2.3.1.</span> <span class="toc-text">1.3.1 如何构建长思维数据</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3-2-%E5%A5%96%E5%8A%B1%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95%E6%9E%84%E5%BB%BA"><span class="toc-number">2.3.2.</span> <span class="toc-text">1.3.2 奖励模型如何构建</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3-3-%E5%A6%82%E4%BD%95%E6%9E%84%E5%BB%BA%E6%8E%A8%E7%90%86%E6%A0%91%EF%BC%9F"><span class="toc-number">2.3.3.</span> <span class="toc-text">1.3.3 如何构建推理树？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3-4-%E5%A6%82%E4%BD%95%E4%BB%8E%E6%8E%A8%E7%90%86%E6%A0%91%E4%B8%AD%E6%8E%A8%E5%AF%BC%E5%87%BA%E9%95%BF%E6%80%9D%E7%BB%B4%EF%BC%9F"><span class="toc-number">2.3.4.</span> <span class="toc-text">1.3.4 如何从推理树中推导出长思维？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3-5-%E9%95%BF%E6%80%9D%E7%BB%B4%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83"><span class="toc-number">2.3.5.</span> <span class="toc-text">1.3.5 长思维模型训练</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3-6-AI%E5%92%8C%E4%BA%BA%E7%B1%BB%E5%8D%8F%E5%90%8C%E6%A0%87%E6%B3%A8%E7%AD%96%E7%95%A5"><span class="toc-number">2.3.6.</span> <span class="toc-text">1.3.6 AI和人类协同标注策略</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-4-%E9%95%BF%E6%80%9D%E7%BB%B4%E8%83%BD%E5%8A%9B%E5%8F%AF%E8%83%BD%E7%9A%84%E8%8E%B7%E5%BE%97%E6%96%B9%E5%BC%8F-2"><span class="toc-number">2.4.</span> <span class="toc-text">1.4 长思维能力可能的获得方式-2</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-4-1-%E7%8A%B6%E6%80%81%E7%A9%BA%E9%97%B4"><span class="toc-number">2.4.1.</span> <span class="toc-text">1.4.1 状态空间</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-4-2-%E8%A1%8C%E4%B8%BA%E7%A9%BA%E9%97%B4"><span class="toc-number">2.4.2.</span> <span class="toc-text">1.4.2 行为空间</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-4-3-%E5%A5%96%E5%8A%B1%E6%A8%A1%E5%9E%8B"><span class="toc-number">2.4.3.</span> <span class="toc-text">1.4.3 奖励模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-4-4-%E8%AE%BE%E6%83%B3%E7%9A%84%E6%A8%A1%E5%9E%8B%E7%BB%93%E6%9E%84"><span class="toc-number">2.4.4.</span> <span class="toc-text">1.4.4 设想的模型结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-4-5-%E8%92%99%E7%89%B9%E5%8D%A1%E6%B4%9B%E6%A0%91MCST%E6%A0%91%E6%90%9C%E7%B4%A2"><span class="toc-number">2.4.5.</span> <span class="toc-text">1.4.5 蒙特卡洛树MCST树搜索</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-5-%E9%95%BF%E6%80%9D%E7%BB%B4%E8%83%BD%E5%8A%9B%E5%8F%AF%E8%83%BD%E7%9A%84%E8%8E%B7%E5%BE%97%E6%96%B9%E5%BC%8F-3"><span class="toc-number">2.5.</span> <span class="toc-text">1.5 长思维能力可能的获得方式-3</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E3%80%81-%E5%85%B6%E4%BB%96%EF%BC%9A%E5%BE%AE%E8%BD%AF-%E5%85%B3%E9%94%AE%E8%AE%A1%E5%88%92%E6%AD%A5%E9%AA%A4%E5%AD%A6%E4%B9%A0"><span class="toc-number">3.</span> <span class="toc-text">三、 其他：微软-关键计划步骤学习</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-%E8%AE%A1%E5%88%92%E6%90%9C%E7%B4%A2"><span class="toc-number">3.1.</span> <span class="toc-text">2.1 计划搜索</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-%E5%85%B3%E9%94%AE%E8%AE%A1%E5%88%92%E6%AD%A5%E9%AA%A4%E5%AD%A6%E4%B9%A0%EF%BC%88Step-APO%EF%BC%89"><span class="toc-number">3.1.1.</span> <span class="toc-text">2.2 关键计划步骤学习（Step-APO）</span></a></li></ol></li></ol></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2024/10/25/OpenaiO1/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2024/10/25/OpenaiO1/&text=OpenaiO1"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2024/10/25/OpenaiO1/&title=OpenaiO1"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2024/10/25/OpenaiO1/&is_video=false&description=OpenaiO1"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=OpenaiO1&body=Check out this article: http://example.com/2024/10/25/OpenaiO1/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2024/10/25/OpenaiO1/&title=OpenaiO1"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2024/10/25/OpenaiO1/&title=OpenaiO1"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2024/10/25/OpenaiO1/&title=OpenaiO1"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2024/10/25/OpenaiO1/&title=OpenaiO1"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2024/10/25/OpenaiO1/&name=OpenaiO1&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2024/10/25/OpenaiO1/&t=OpenaiO1"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2020-2024
+    Macvh
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/probberechts">Projects</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>
