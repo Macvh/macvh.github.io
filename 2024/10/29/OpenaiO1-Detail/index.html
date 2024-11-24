@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="一、Openai o1介绍1.1 Openai o1长什么样？OpenAI o1的核心特点：花费较长的时间进行思考，注重推理；具有自我反思与错误修正的能力。 上海交大对于OpenAI提供的o1推理示例进行了详细分析，其中包括解决复杂任务的八个推理步骤或“思想”的实例。这些示例通过仔细检查，提取相关的特征，如标记数、行数和关键词，得出结论如下：  随着难度的增加，响应长度（包括标记数和行数）倾向于成">
+<meta property="og:type" content="article">
+<meta property="og:title" content="OpenaiO1调研报告">
+<meta property="og:url" content="http://example.com/2024/10/29/OpenaiO1-Detail/index.html">
+<meta property="og:site_name" content="Macvh@小屋">
+<meta property="og:description" content="一、Openai o1介绍1.1 Openai o1长什么样？OpenAI o1的核心特点：花费较长的时间进行思考，注重推理；具有自我反思与错误修正的能力。 上海交大对于OpenAI提供的o1推理示例进行了详细分析，其中包括解决复杂任务的八个推理步骤或“思想”的实例。这些示例通过仔细检查，提取相关的特征，如标记数、行数和关键词，得出结论如下：  随着难度的增加，响应长度（包括标记数和行数）倾向于成">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2024/10/29/OpenaiO1-Detail/image.png">
+<meta property="og:image" content="http://example.com/2024/10/29/OpenaiO1-Detail/image1.png">
+<meta property="og:image" content="http://example.com/2024/10/29/OpenaiO1-Detail/image2.png">
+<meta property="og:image" content="http://example.com/2024/10/29/OpenaiO1-Detail/image3.png">
+<meta property="og:image" content="http://example.com/2024/10/29/OpenaiO1-Detail/image4.png">
+<meta property="og:image" content="http://example.com/2024/10/29/OpenaiO1-Detail/image5.png">
+<meta property="og:image" content="http://example.com/2024/10/29/OpenaiO1-Detail/image6.png">
+<meta property="og:image" content="http://example.com/2024/10/29/OpenaiO1-Detail/image7.png">
+<meta property="og:image" content="http://example.com/2024/10/29/OpenaiO1-Detail/image8.png">
+<meta property="og:image" content="http://example.com/2024/10/29/OpenaiO1-Detail/image9.png">
+<meta property="og:image" content="http://example.com/2024/10/29/OpenaiO1-Detail/image10.png">
+<meta property="og:image" content="http://example.com/2024/10/29/OpenaiO1-Detail/image11.jpg">
+<meta property="og:image" content="http://example.com/2024/10/29/OpenaiO1-Detail/image12.jpg">
+<meta property="article:published_time" content="2024-10-29T05:30:10.000Z">
+<meta property="article:modified_time" content="2024-11-24T09:53:34.886Z">
+<meta property="article:author" content="Macvh">
+<meta property="article:tag" content="大模型">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2024/10/29/OpenaiO1-Detail/image.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/myfavicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/myfavicon.ico" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/myfavicon.ico">
+        
+      
+    
+    <!-- title -->
+    <title>OpenaiO1调研报告</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+		<script type="text/x-mathjax-config">
+		  MathJax.Hub.Config({
+			tex2jax: {
+			  skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+			  inlineMath: [['$','$']]
+			}
+		  });
+		</script>
+		<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/probberechts">Projects</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2024/10/25/OpenaiO1/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2024/10/29/OpenaiO1-Detail/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2024/10/29/OpenaiO1-Detail/&text=OpenaiO1调研报告"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2024/10/29/OpenaiO1-Detail/&title=OpenaiO1调研报告"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2024/10/29/OpenaiO1-Detail/&is_video=false&description=OpenaiO1调研报告"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=OpenaiO1调研报告&body=Check out this article: http://example.com/2024/10/29/OpenaiO1-Detail/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2024/10/29/OpenaiO1-Detail/&title=OpenaiO1调研报告"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2024/10/29/OpenaiO1-Detail/&title=OpenaiO1调研报告"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2024/10/29/OpenaiO1-Detail/&title=OpenaiO1调研报告"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2024/10/29/OpenaiO1-Detail/&title=OpenaiO1调研报告"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2024/10/29/OpenaiO1-Detail/&name=OpenaiO1调研报告&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2024/10/29/OpenaiO1-Detail/&t=OpenaiO1调研报告"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81Openai-o1%E4%BB%8B%E7%BB%8D"><span class="toc-number">1.</span> <span class="toc-text">一、Openai o1介绍</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-1-Openai-o1%E9%95%BF%E4%BB%80%E4%B9%88%E6%A0%B7%EF%BC%9F"><span class="toc-number">1.1.</span> <span class="toc-text">1.1 Openai o1长什么样？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-2-Openai-o1%E7%9A%84%E8%83%BD%E5%8A%9B%E6%80%8E%E4%B9%88%E6%A0%B7%EF%BC%9F"><span class="toc-number">1.2.</span> <span class="toc-text">1.2 Openai o1的能力怎么样？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-3-Openai-o1%E4%BB%8E%E4%BD%95%E8%80%8C%E6%9D%A5%E7%9A%84%E6%8F%90%E5%8D%87"><span class="toc-number">1.3.</span> <span class="toc-text">1.3 Openai o1从何而来的提升</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81Openai-o1%E5%8F%AF%E8%83%BD%E7%9A%84%E6%8A%80%E6%9C%AF%E8%B7%AF%E7%BA%BF"><span class="toc-number">2.</span> <span class="toc-text">二、Openai o1可能的技术路线</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-%E5%A6%82%E4%BD%95%E5%88%A9%E7%94%A8Test-Inference-Time-scaling-law%E6%8F%90%E5%8D%87%E6%A8%A1%E5%9E%8B%E7%9A%84%E6%8E%A8%E7%90%86%E6%95%88%E6%9E%9C"><span class="toc-number">2.1.</span> <span class="toc-text">2.1 如何利用Test&#x2F;Inference-Time scaling law提升模型的推理效果</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-%E4%BC%98%E5%8C%96%E6%8E%A8%E7%90%86%E8%BE%93%E5%85%A5%EF%BC%9APrompt"><span class="toc-number">2.1.1.</span> <span class="toc-text">2.1 优化推理输入：Prompt</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-%E4%BC%98%E5%8C%96%E6%8E%A8%E7%90%86%E8%BE%93%E5%87%BA%EF%BC%9ARevise-Output-Distribution"><span class="toc-number">2.1.2.</span> <span class="toc-text">2.2 优化推理输出：Revise Output Distribution</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-%E5%8F%AF%E8%83%BD%E7%9A%84%E5%AE%9E%E7%8E%B0%E6%96%B9%E6%A1%88"><span class="toc-number">2.2.</span> <span class="toc-text">2.2 可能的实现方案</span></a></li></ol></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        OpenaiO1调研报告
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">Macvh</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2024-10-29T05:30:10.000Z" class="dt-published" itemprop="datePublished">2024-10-29</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%9B%B8%E5%85%B3/">大模型相关</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B/" rel="tag">大模型</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h1 id="一、Openai-o1介绍"><a href="#一、Openai-o1介绍" class="headerlink" title="一、Openai o1介绍"></a>一、Openai o1介绍</h1><h2 id="1-1-Openai-o1长什么样？"><a href="#1-1-Openai-o1长什么样？" class="headerlink" title="1.1 Openai o1长什么样？"></a>1.1 Openai o1长什么样？</h2><p><strong>OpenAI o1的核心特点：</strong>花费较长的时间进行思考，注重推理；具有自我反思与错误修正的能力。</p>
+<p>上海交大对于OpenAI提供的o1推理示例进行了详细分析，其中包括解决复杂任务的八个推理步骤或“思想”的实例。这些示例通过仔细检查，提取相关的特征，如标记数、行数和关键词，得出结论如下：</p>
+<ol>
+<li>随着难度的增加，<strong>响应长度（包括标记数和行数）倾向于成比例增长。这表明更高难度的任务涉及更多的推理步骤，以及增加相应的耗时。</strong></li>
+<li>像“考虑”、“如果”和“可能”这类词在更复杂的问题中出现频繁，<strong>表明模型在探索多条解决路径</strong>。像“等待”和“或者”这样的关键词则<strong>表明模型具备反思和自我纠正的能力</strong>，显示出更深层次的非线性推理过程。</li>
+</ol>
+<blockquote>
+<p>上交复现报告：<a target="_blank" rel="noopener" href="https://arxiv.org/pdf/2410.18982">https://arxiv.org/pdf/2410.18982</a></p>
+</blockquote>
+<p><img src="/2024/10/29/OpenaiO1-Detail/image.png"> <img src="/2024/10/29/OpenaiO1-Detail/image1.png"></p>
+<aside style="background-color: #add8e6; padding: 10px">
+    <strong><font color="black">💡结论：(1) 重新审视和修改之前的输出；(2) 进入后续推理阶段；(3) 探索不同的推理路径；（4）推理耗时较久。</font></strong>
+</aside>
+
+<h2 id="1-2-Openai-o1的能力怎么样？"><a href="#1-2-Openai-o1的能力怎么样？" class="headerlink" title="1.2 Openai o1的能力怎么样？"></a>1.2 Openai o1的能力怎么样？</h2><ol>
+<li><strong>在高推理能力要求的任务</strong>：o1在业界排行榜上登顶，尤其在数学和编程能力方面，其得分显著超越了GPT-4o。在处理博士级别的科学问题（GPQA Diamond，包括物理、化学和生物领域的问题）时，o1的表现甚至超越了人类博士水平的专家。（这表明o1-preview在复杂问题求解和逻辑推理方面具有卓越的能力）</li>
+</ol>
+<p><img src="/2024/10/29/OpenaiO1-Detail/image2.png"> <img src="/2024/10/29/OpenaiO1-Detail/image3.png"></p>
+<p><strong>在推理能力要求相对较低的任务</strong>：如写作和文字编辑，o1的提升幅度相对有限。（更多是因为这些任务更多依赖于创造性表达和语言流畅性，而不是纯粹的逻辑推理）</p>
+<p><img src="/2024/10/29/OpenaiO1-Detail/image4.png"> <img src="/2024/10/29/OpenaiO1-Detail/image5.png"></p>
+<blockquote>
+<p>Openai官方报告：<a target="_blank" rel="noopener" href="https://openai.com/index/learning-to-reason-with-llms/">https://openai.com/index/learning-to-reason-with-llms/</a></p>
+</blockquote>
+<blockquote>
+<p>LLMs竞技场：<a target="_blank" rel="noopener" href="https://lmarena.ai/?leaderboard">https://lmarena.ai/?leaderboard</a></p>
+</blockquote>
+<aside style="background-color: #add8e6; padding: 10px">
+    <strong><font color="black">💡结论：具有超强推理能力，尤其在数学、物理、生物学、化学及编程等领域表现卓越，能够通过内部思维链进行深度思考和复杂推理</font></strong>
+</aside>
+
+<h2 id="1-3-Openai-o1从何而来的提升"><a href="#1-3-Openai-o1从何而来的提升" class="headerlink" title="1.3 Openai o1从何而来的提升"></a>1.3 Openai o1从何而来的提升</h2><aside style="background-color: #add8e6; padding: 10px">
+    <strong><font color="black">💡1. **Test/Inference-Time scaling law**：通过增加推理阶段的算力或时间，能够提升模型的推理能力的一种规律。这一规律与训练阶段的扩展定律（Pretrain-time scaling law）相对应，但侧重点不同；<br>
+2. **Self-Correct：**指模型能够识别并纠正自己在处理问题时所犯的错误的能力。具体来说，这种能力允许模型在不需要外部输入的情况下，通过自身的推理和计算来改进其初始响应，从而得出更准确的答案；
+</font></strong>
+</aside>
+
+<ol>
+<li><strong>Test&#x2F;Inference-Time scaling law：</strong>当前的研究已经表明，给模型更多的test-time计算预算可以极大地提升模型的准确度。例如，Google DeepMind的一项研究探索了两种有效的test-time scaling策略。在FLOPs匹配评估中，可以在较小的基础模型上实现相当高的成功率，甚至超越一个大14倍的模型。他们的<strong>核心策略如下：</strong><ol>
+<li>通过搜索的方式结合过程奖励模型进行判断；</li>
+<li>在推理时不断按照上下文进行模型分布调整。</li>
+</ol>
+</li>
+<li><strong>Self-Correct：</strong>是模型实现更高层次认知能力（meta policy）的基础。代表了彻底的、类人的推理，通过自我修正，模型不仅能够解决当前的问题，还能在未来遇到类似问题时，利用已有的知识和经验进行更有效的推理和决策。实现这个能力的主要要解决的问题在于：<ol>
+<li>如何把模型的正确答案保留；</li>
+<li>如何把模型的错误答案进行纠正；</li>
+<li>如何在训练时保证第一步的答案分布；</li>
+</ol>
+</li>
+</ol>
+<blockquote>
+<p>Test&#x2F;Inference-Time scaling law：<a target="_blank" rel="noopener" href="https://arxiv.org/pdf/2408.03314">https://arxiv.org/pdf/2408.03314</a></p>
+</blockquote>
+<blockquote>
+<p>GDM也有研究通过RL实现了相较o1略简略，但仍十分惊艳的自我修正能力：<a target="_blank" rel="noopener" href="https://arxiv.org/pdf/2409.12917">https://arxiv.org/pdf/2409.12917</a></p>
+</blockquote>
+<h1 id="二、Openai-o1可能的技术路线"><a href="#二、Openai-o1可能的技术路线" class="headerlink" title="二、Openai o1可能的技术路线"></a>二、Openai o1可能的技术路线</h1><h2 id="2-1-如何利用Test-Inference-Time-scaling-law提升模型的推理效果"><a href="#2-1-如何利用Test-Inference-Time-scaling-law提升模型的推理效果" class="headerlink" title="2.1 如何利用Test&#x2F;Inference-Time scaling law提升模型的推理效果"></a>2.1 如何利用<strong>Test&#x2F;Inference-Time scaling law提升模型的推理效果</strong></h2><h3 id="2-1-优化推理输入：Prompt"><a href="#2-1-优化推理输入：Prompt" class="headerlink" title="2.1 优化推理输入：Prompt"></a>2.1 优化推理输入：Prompt</h3><p>为了让模型能更好模拟人类的思考方式，希望【模型在步步思考后再给出回答，让模型的生成结果里包含思考步骤+答案】，那么可以选择在prompt中给模型相应的例子，或者在多轮对话中引导模型think step by step。</p>
+<blockquote>
+<p>代表性的此类方法为COT：<a target="_blank" rel="noopener" href="https://arxiv.org/pdf/2201.11903">https://arxiv.org/pdf/2201.11903</a></p>
+</blockquote>
+<p><strong>Prompt给的越细节，多轮引导给的越多，模型或许就能产出更好的结果。而更多的token意味着推理阶段需要花费更多的算力，所以这就所说的【把算力花在推理阶段上可以提升模型效果】的具体内容之一。</strong></p>
+<p><img src="/2024/10/29/OpenaiO1-Detail/image6.png"></p>
+<table>
+<thead>
+<tr>
+<th>类别</th>
+<th>时间</th>
+<th>名称</th>
+<th>特点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>基础</td>
+<td>2022</td>
+<td>COT</td>
+<td>通过few-shot或者在多轮对话中引导模型think step by step</td>
+</tr>
+<tr>
+<td></td>
+<td>2022</td>
+<td>COT-SC</td>
+<td>生成多条推理链，综合推理链寻找最为一致的答案</td>
+</tr>
+<tr>
+<td></td>
+<td>2023</td>
+<td>LogiCoT</td>
+<td>在链式推理过程中，增加了“反证法”核查并纠正模型产生的推理步骤</td>
+</tr>
+<tr>
+<td></td>
+<td>2023</td>
+<td>TOT</td>
+<td>构建树状思维结构，生成并评估中间推理步骤</td>
+</tr>
+<tr>
+<td>进阶</td>
+<td>2022</td>
+<td>ReAct</td>
+<td>融合推理与行动能力，与外部环境（如维基百科）交互，将更多信息纳入推理</td>
+</tr>
+<tr>
+<td></td>
+<td>2023</td>
+<td>Plan&amp;Execute</td>
+<td>先规划再执行，将复杂任务分解为简单子任务并逐个执行</td>
+</tr>
+<tr>
+<td></td>
+<td>2024</td>
+<td>Self-Discover</td>
+<td>设定了几类推理结构，让模型自我发现不同任务内在的推理结构，增加方法的普适性</td>
+</tr>
+</tbody></table>
+<aside style="background-color: #add8e6; padding: 10px">
+    <strong><font color="black">💡结论：仍需要点对点的构建prompt/推理框架，缺乏泛化性；纠错能力差；未改变模型自身能力；</font></strong>
+</aside>
+
+<h3 id="2-2-优化推理输出：Revise-Output-Distribution"><a href="#2-2-优化推理输出：Revise-Output-Distribution" class="headerlink" title="2.2 优化推理输出：Revise Output Distribution"></a><strong>2.2 优化推理输出：Revise Output Distribution</strong></h3><p>目的是输入问题之后，让模型自己产生：<strong>attempt1 -&gt; attempt2 -&gt; attempt3 -&gt; …-&gt; attempti -&gt; answer。实现方法：</strong></p>
+<ol>
+<li><strong>直接进行SFT：</strong>构建problem -&gt; attempt1 -&gt; … -&gt; attempti -&gt; answer数据，对模型进行sft；</li>
+<li><strong>利用RL的方法：</strong>训练奖励模型，让它对每个attempt进行评估，利用评估结果指引模型步步搜索；</li>
+</ol>
+<p>简单来说，一方面，可以优化推理阶段，通过一个能够评估中间步骤的verifier，再推理时指引模型搜索出最佳答案；另一方面，可以在post-traning阶段，使用这个verifier来指导模型自动化生产高质量数据，进一步对齐。</p>
+<p><strong>即核心基本框架有以下三种：</strong></p>
+<p><img src="/2024/10/29/OpenaiO1-Detail/image7.png"></p>
+<h2 id="2-2-可能的实现方案"><a href="#2-2-可能的实现方案" class="headerlink" title="2.2 可能的实现方案"></a>2.2 可能的实现方案</h2><p>业界也针对o1进行了许多探究，提出了许多可能的技术路线和实现方案，核心是对上文总结的框架进行细节填充，大致可分为以下几类：</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>方法</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>框架一</td>
+<td>各类Prompt推理框架</td>
+<td>利用COT、TOT等框架，在输入时引入推理步骤和自我反思能力，提高模型在复杂问题解答上的表现；</td>
+</tr>
+<tr>
+<td>框架一</td>
+<td>类rStar的方法（针对框架图中的黄色块）</td>
+<td>纯靠对inference的搜索优化，具体依赖两个步骤：设定了5种推理step（包括回溯），按照人类的思考方式构造一棵思考树；使用MCTS搜索最佳推理路径，引入discriminator，指导优化，找到最佳路径；<img src="/2024/10/29/OpenaiO1-Detail/image8.png"></td>
+</tr>
+<tr>
+<td>框架二</td>
+<td>类上交的复现方法（针对框架图中的蓝色块）</td>
+<td>提出了“旅程学习”，让模型不仅学习解决方案的捷径，还包括试错、反思和回溯的完整探索过程。步骤如下：构造除正确推理路径之外，还包含试错、反思和回溯的完整类人探索过程的推理链长思维数据；利用构造的推理数据监督微调SFT模型，先让模型直接学习正确推理路径；再让模型学习包含反思等步骤等长思维推理路径；使用直接偏好学习DPO进一步调整模型，在正确和错误答案的比较中学习；<img src="/2024/10/29/OpenaiO1-Detail/image9.png"></td>
+</tr>
+<tr>
+<td>框架二</td>
+<td>类SCoRe的方法</td>
+<td>采用RL的方式让模型具备自我纠正的能力，SCoRe最多只进行2轮回答（即做1次修复），如：<strong>problem + 第1轮回答 + 一段instruction模版（提醒模型判断答案是否正确） + 第2轮回答 + 最终答案。</strong>采用两阶段的训练方法：stage1: 奖励函数值用于评估第2轮回答和真值回答之间的契合度；KL散度限制第1轮回答的分布不要偏离基础模型的分布太多，避免行为奔溃；stage2: 核心奖励为第2轮奖励-第一轮奖励，鼓励第2轮的回答要比第1轮的回答要好，使得模型发现自我纠正的策略；添加“奖励塑形”，奖励那些朝着自我纠正方向进步的转换，惩罚那些将正确响应改为错误的转换；<img src="/2024/10/29/OpenaiO1-Detail/image10.png"></td>
+</tr>
+<tr>
+<td>框架三</td>
+<td>类AlphaZero的方法（针对框架图中的蓝色块）</td>
+<td>参照 AlphaZero的主体思路，将RL和LLM融合起来，连续token预测为状态空间，推理steps为行为空间，包含两个关键结构：一是用于常规的LLM预测下一个Token，这与传统的LLM功能一致；二是在Head之上构建的RL模型结构，该设计借鉴了AlphaZero的思想，实现了一个网络输出两个结果的功能；它一方面输出<strong>策略网络P</strong>的结果，代表在当前状态下，下一步“思考因子”Action的分布概率。某个“思考因子”的概率越高，意味着下一步这个Action被选择执行的可能性越大；另一方面，该网络还会输出<strong>价值网络V</strong>的结果，这代表了当前状态通向最终正确答案的概率大小。<img src="/2024/10/29/OpenaiO1-Detail/image11.jpg"></td>
+</tr>
+<tr>
+<td>框架三</td>
+<td>Self-Play的方法</td>
+<td>核心为Self-play的方式产出推理数据，使用Generator-Verifier自博弈的方式Scaling到更强的性能，整体可能的实现方式如下：<strong>模型系统架构：</strong>确定使用generator和verifier两个相互配合的模型。在部署时，这两个模型将组合成一个系统来共同完成任务。<strong>更新机制设计：</strong>采用actor-critic的架构，并结合TD-error来更新generator和verifier模型。<strong>内外环设计：****内环设计</strong>：由Generator和Verifier组成的self-play系统，它们之间通过纯自然语言进行交互。在这个内环中，Generator负责生成策略或动作，而Verifier则负责验证和评估这些策略或动作的有效性。这两个步骤（Generator step和Verifier step）可以根据具体需求进行灵活组合和调整。<strong>外环设计</strong>：外环主要涉及Reward Model与整个Generator-Verifier系统的对抗。在这个过程中，Reward Model通过不断调整reward来引导系统朝着更好的方向发展，而Generator和Verifier则需要不断适应这些变化，以找到更优的策略。<img src="/2024/10/29/OpenaiO1-Detail/image12.jpg"></td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>rStar：<a target="_blank" rel="noopener" href="https://arxiv.org/pdf/2408.06195">https://arxiv.org/pdf/2408.06195</a></p>
+<p>上交：<a target="_blank" rel="noopener" href="https://arxiv.org/pdf/2410.18982">https://arxiv.org/pdf/2410.18982</a></p>
+<p>SCoRe：<a target="_blank" rel="noopener" href="https://arxiv.org/pdf/2409.12917">https://arxiv.org/pdf/2409.12917</a></p>
+<p>类AlphaZero：<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=MzI1MzEwMzIwOQ==&mid=2247492068&idx=1&sn=d25e3c10c3e1b6c9a6295e4e78601b87&scene=21#wechat_redirect">https://mp.weixin.qq.com/s?__biz&#x3D;MzI1MzEwMzIwOQ&#x3D;&#x3D;&amp;mid&#x3D;2247492068&amp;idx&#x3D;1&amp;sn&#x3D;d25e3c10c3e1b6c9a6295e4e78601b87&amp;scene&#x3D;21#wechat_redirect</a></p>
+<p>类Self-Play：<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=MzI1MzEwMzIwOQ==&mid=2247491826&idx=1&sn=7bbff5c5686afe0ae05fc37ef10aa001&scene=21#wechat_redirect">https://mp.weixin.qq.com/s?__biz&#x3D;MzI1MzEwMzIwOQ&#x3D;&#x3D;&amp;mid&#x3D;2247491826&amp;idx&#x3D;1&amp;sn&#x3D;7bbff5c5686afe0ae05fc37ef10aa001&amp;scene&#x3D;21#wechat_redirect</a></p>
+</blockquote>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/about/">About</a></li>
+        
+          <li><a href="/archives/">Writing</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="http://github.com/probberechts">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81Openai-o1%E4%BB%8B%E7%BB%8D"><span class="toc-number">1.</span> <span class="toc-text">一、Openai o1介绍</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-1-Openai-o1%E9%95%BF%E4%BB%80%E4%B9%88%E6%A0%B7%EF%BC%9F"><span class="toc-number">1.1.</span> <span class="toc-text">1.1 Openai o1长什么样？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-2-Openai-o1%E7%9A%84%E8%83%BD%E5%8A%9B%E6%80%8E%E4%B9%88%E6%A0%B7%EF%BC%9F"><span class="toc-number">1.2.</span> <span class="toc-text">1.2 Openai o1的能力怎么样？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-3-Openai-o1%E4%BB%8E%E4%BD%95%E8%80%8C%E6%9D%A5%E7%9A%84%E6%8F%90%E5%8D%87"><span class="toc-number">1.3.</span> <span class="toc-text">1.3 Openai o1从何而来的提升</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81Openai-o1%E5%8F%AF%E8%83%BD%E7%9A%84%E6%8A%80%E6%9C%AF%E8%B7%AF%E7%BA%BF"><span class="toc-number">2.</span> <span class="toc-text">二、Openai o1可能的技术路线</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-%E5%A6%82%E4%BD%95%E5%88%A9%E7%94%A8Test-Inference-Time-scaling-law%E6%8F%90%E5%8D%87%E6%A8%A1%E5%9E%8B%E7%9A%84%E6%8E%A8%E7%90%86%E6%95%88%E6%9E%9C"><span class="toc-number">2.1.</span> <span class="toc-text">2.1 如何利用Test&#x2F;Inference-Time scaling law提升模型的推理效果</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-%E4%BC%98%E5%8C%96%E6%8E%A8%E7%90%86%E8%BE%93%E5%85%A5%EF%BC%9APrompt"><span class="toc-number">2.1.1.</span> <span class="toc-text">2.1 优化推理输入：Prompt</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-%E4%BC%98%E5%8C%96%E6%8E%A8%E7%90%86%E8%BE%93%E5%87%BA%EF%BC%9ARevise-Output-Distribution"><span class="toc-number">2.1.2.</span> <span class="toc-text">2.2 优化推理输出：Revise Output Distribution</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-%E5%8F%AF%E8%83%BD%E7%9A%84%E5%AE%9E%E7%8E%B0%E6%96%B9%E6%A1%88"><span class="toc-number">2.2.</span> <span class="toc-text">2.2 可能的实现方案</span></a></li></ol></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2024/10/29/OpenaiO1-Detail/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2024/10/29/OpenaiO1-Detail/&text=OpenaiO1调研报告"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2024/10/29/OpenaiO1-Detail/&title=OpenaiO1调研报告"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2024/10/29/OpenaiO1-Detail/&is_video=false&description=OpenaiO1调研报告"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=OpenaiO1调研报告&body=Check out this article: http://example.com/2024/10/29/OpenaiO1-Detail/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2024/10/29/OpenaiO1-Detail/&title=OpenaiO1调研报告"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2024/10/29/OpenaiO1-Detail/&title=OpenaiO1调研报告"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2024/10/29/OpenaiO1-Detail/&title=OpenaiO1调研报告"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2024/10/29/OpenaiO1-Detail/&title=OpenaiO1调研报告"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2024/10/29/OpenaiO1-Detail/&name=OpenaiO1调研报告&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2024/10/29/OpenaiO1-Detail/&t=OpenaiO1调研报告"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2020-2024
+    Macvh
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/probberechts">Projects</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

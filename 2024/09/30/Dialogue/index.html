@@ -13,17 +13,17 @@
 <meta property="og:site_name" content="Macvh@小屋">
 <meta property="og:description" content="1. 多轮对话系统介绍多轮对话任务可以看作是一个序列到序列的任务，它从用户消息中生成系统响应。可分为 TOD 系统和 ODD 系统。TOD 系统可帮助用户解决特定域内的任务，例如酒店预订、餐厅推荐等，而 ODD 系统则不受域限制地与用户聊天。TOD 任务和 ODD 任务并不完全独立，一旦对话系统检测到特定的用户需求，ODD 任务就可以转换为 TOD 任务。  引用至 [1] A Survey on">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://example.com/2023/12/28/LlmIllusion/ge.png">
-<meta property="og:image" content="http://example.com/2023/12/28/LlmIllusion/ge1.png">
-<meta property="og:image" content="http://example.com/2023/12/28/LlmIllusion/ge2.png">
-<meta property="og:image" content="http://example.com/2023/12/28/LlmIllusion/ge3.png">
-<meta property="og:image" content="http://example.com/2023/12/28/LlmIllusion/ge4.png">
+<meta property="og:image" content="http://example.com/2024/09/30/Dialogue/image.png">
+<meta property="og:image" content="http://example.com/2024/09/30/Dialogue/image1.png">
+<meta property="og:image" content="http://example.com/2024/09/30/Dialogue/image2.png">
+<meta property="og:image" content="http://example.com/2024/09/30/Dialogue/image3.png">
+<meta property="og:image" content="http://example.com/2024/09/30/Dialogue/image4.png">
 <meta property="article:published_time" content="2024-09-30T09:18:43.000Z">
 <meta property="article:modified_time" content="2024-09-30T09:23:49.050Z">
 <meta property="article:author" content="Macvh">
 <meta property="article:tag" content="大模型">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/2023/12/28/LlmIllusion/ge.png">
+<meta name="twitter:image" content="http://example.com/2024/09/30/Dialogue/image.png">
     
     
       
@@ -198,9 +198,9 @@
 <li>首先，尽管模型能够从对话数据中学习到很多知识，但由于生成模型自身的特点，它无法保证在人类专家设定的对话策略内百分百正确，缺乏可解释性，会存在幻觉等无法料想到的问题，需要花费大力气设计复杂的评估方法。</li>
 <li>其次，真实人类的对话数据往往充满了复杂性和不确定性，如口语化表达、多问多答等情况。这些复杂性使得训练数据需要经过清洗和预处理才能用于模型训练，而这又可能导致模型失去一些真实对话中的细微差别和丰富性。因此，依靠这些数据也很难完全激发模型在特定专业场景下（如推销）的真实人类对话能力。</li>
 </ol>
-<h1 id="3-基于大模型的对话系统"><a href="#3-基于大模型的对话系统" class="headerlink" title="3. 基于大模型的对话系统"></a>3. 基于大模型的对话系统</h1><p><img src="/2023/12/28/LlmIllusion/ge.png"></p>
+<h1 id="3-基于大模型的对话系统"><a href="#3-基于大模型的对话系统" class="headerlink" title="3. 基于大模型的对话系统"></a>3. 基于大模型的对话系统</h1><p><img src="/2024/09/30/Dialogue/image.png"></p>
 <p>当前基于llm的对话系统大致分为两种框架，基于pipeline的方法和基于端到端的方法。</p>
-<h2 id="3-1-基于pipeline的方法"><a href="#3-1-基于pipeline的方法" class="headerlink" title="3.1 基于pipeline的方法"></a>3.1 基于pipeline的方法</h2><p><img src="/2023/12/28/LlmIllusion/ge1.png"></p>
+<h2 id="3-1-基于pipeline的方法"><a href="#3-1-基于pipeline的方法" class="headerlink" title="3.1 基于pipeline的方法"></a>3.1 基于pipeline的方法</h2><p><img src="/2024/09/30/Dialogue/image1.png"></p>
 <p>基于流水线的 TOD 系统包括四个连接的模块：（1） NLU，用于提取用户意图和填充插槽;（2） 对话状态跟踪 （DST），基于 Pipeline 的 TOD 中的关键模块，用于根据 NLU 模块的输出和对话的历史输入跟踪当前回合的对话状态;（3） 策略学习 （PL），根据 DST 模块生成的对话状态确定后续动作;（4） NLG，基于 Pipeline 的 TOD 系统中的最后一个模块，将 PL 模块生成的对话动作转换为可理解的自然语言。Dialogue Manager （DM） 是基于管道的 TOD 系统的中央控制器，该系统由 DST 模块和 PL 模块组成。</p>
 <h3 id="3-1-1-简单来说分为以下几步："><a href="#3-1-1-简单来说分为以下几步：" class="headerlink" title="3.1.1 简单来说分为以下几步："></a>3.1.1 简单来说分为以下几步：</h3><blockquote>
 <p>引用至 [2] Are Large Language Models All You Need for Task-Oriented Dialogue?</p>
@@ -208,17 +208,17 @@
 <ol>
 <li><strong>第一步：</strong></li>
 </ol>
-<p><img src="/2023/12/28/LlmIllusion/ge2.png"></p>
+<p><img src="/2024/09/30/Dialogue/image2.png"></p>
 <p>进行<em>领域识别</em>，判断当前用户输入属于领域，明确了领域之后，可以判断当前对话处于什么状态，以及确定下一步对话系统应当采取怎样的对话策略。</p>
 <ol start="2">
 <li><strong>第二步：</strong></li>
 </ol>
-<p><img src="/2023/12/28/LlmIllusion/ge3.png"></p>
+<p><img src="/2024/09/30/Dialogue/image3.png"></p>
 <p>然后是进行<em>对话状态更新</em>，根据领域识别的结果，提供任务定义、领域描述、对话历史和用户画像信息等内容，总结当前用户的对话状态。</p>
 <ol start="3">
 <li><strong>第三步：</strong></li>
 </ol>
-<p><img src="/2023/12/28/LlmIllusion/ge4.png"></p>
+<p><img src="/2024/09/30/Dialogue/image4.png"></p>
 <p>最后是进行<em>对话生成</em>，结合前面步骤获取的内容，生成给用户的回复。可采取一系列简单的对话策略逻辑。</p>
 <h3 id="3-1-2-结论"><a href="#3-1-2-结论" class="headerlink" title="3.1.2 结论"></a>3.1.2 结论</h3><p>基于大模型的pipeline方法，有研究者得出结论：</p>
 <ul>

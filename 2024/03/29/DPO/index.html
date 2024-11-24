@@ -13,17 +13,17 @@
 <meta property="og:site_name" content="Macvh@小屋">
 <meta property="og:description" content="一、DPO vs RLHF？基于人类反馈的强化学习RLHF分为三个阶段：全监督微调（SFT）、奖励模型（RM）、强化学习（PPO）。但是RLHF面临缺陷：RLHF 是一个复杂且经常不稳定的过程，首先拟合反映人类偏好的奖励模型，然后使用强化学习微调大型无监督 LM，以最大化这种估计奖励，而不会偏离原始模型太远。为解决这一问题，提出一个直接偏好优化 (DPO) 的新算法：通过利用奖励函数与最优策略之间">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://example.com/2023/12/28/LlmIllusion/g">
-<meta property="og:image" content="http://example.com/2023/12/28/LlmIllusion/ng">
-<meta property="og:image" content="http://example.com/2023/12/28/LlmIllusion/ng">
-<meta property="og:image" content="http://example.com/2023/12/28/LlmIllusion/ng">
-<meta property="og:image" content="http://example.com/2023/12/28/LlmIllusion/ng">
+<meta property="og:image" content="http://example.com/2024/03/29/DPO/image.png">
+<meta property="og:image" content="http://example.com/2024/03/29/DPO/image1.png">
+<meta property="og:image" content="http://example.com/2024/03/29/DPO/image2.png">
+<meta property="og:image" content="http://example.com/2024/03/29/DPO/image3.png">
+<meta property="og:image" content="http://example.com/2024/03/29/DPO/image4.png">
 <meta property="article:published_time" content="2024-03-29T07:37:12.000Z">
 <meta property="article:modified_time" content="2024-09-24T12:30:19.256Z">
 <meta property="article:author" content="Macvh">
 <meta property="article:tag" content="大模型">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/2023/12/28/LlmIllusion/g">
+<meta name="twitter:image" content="http://example.com/2024/03/29/DPO/image.png">
     
     
       
@@ -182,7 +182,7 @@
 
   <div class="content e-content" itemprop="articleBody">
     <h1 id="一、DPO-vs-RLHF？"><a href="#一、DPO-vs-RLHF？" class="headerlink" title="一、DPO vs RLHF？"></a>一、DPO vs RLHF？</h1><p>基于人类反馈的强化学习<a target="_blank" rel="noopener" href="https://www.cnblogs.com/lemonzhang/p/17819158.html">RLHF分为三个阶段</a>：全监督微调（SFT）、奖励模型（RM）、强化学习（PPO）。但是RLHF面临缺陷：<strong>RLHF 是一个复杂且经常不稳定的过程</strong>，首先拟合反映人类偏好的奖励模型，然后使用强化学习微调大型无监督 LM，以最大化这种估计奖励，而不会偏离原始模型太远。为解决这一问题，<strong>提出一个直接偏好优化 (DPO) 的新算法：通过利用奖励函数与最优策略之间的映射关系，证明这个受限的奖励最大化问题可以通过单阶段的策略训练来精确优化，本质上是在人类偏好数据上解决一个分类问题</strong>。DPO是稳定的、性能和计算成本轻量级的，无需拟合奖励模型，在微调期间从 LM 中采样，或执行显着的超参数调整。</p>
-<p><img src="/2023/12/28/LlmIllusion/g"></p>
+<p><img src="/2024/03/29/DPO/image.png"></p>
 <ol>
 <li>RLHF算法:**包含奖励模型(reward model)和策略模型(policy model，也称为演员模型，actor model)**，基于偏好数据以及强化学习不断迭代优化策略模型的过程。</li>
 <li>DPO算法:<strong>不包含奖励模型和强化学习过程，直接通过偏好数据进行微调，将强化学习过程直接转换为SFT过程</strong>，因此整个训练过程简单、高效，<strong>主要的改进之处体现在于损失函数</strong>。</li>
@@ -201,18 +201,18 @@
 <h1 id="二、DPO的损失函数？"><a href="#二、DPO的损失函数？" class="headerlink" title="二、DPO的损失函数？"></a>二、DPO的损失函数？</h1><h3 id="RLHF是如何训练的？"><a href="#RLHF是如何训练的？" class="headerlink" title="RLHF是如何训练的？"></a>RLHF是如何训练的？</h3><ol>
 <li><strong>第一步：</strong>训练reward model。训练数据是同一个prompt的2个回答，让人或者LLM标注哪个回答更好，reward去优化如下的loss：</li>
 </ol>
-<p><img src="/2023/12/28/LlmIllusion/ng"></p>
+<p><img src="/2024/03/29/DPO/image1.png"></p>
 <p>其中$r$就是reward model 用来给回答打分。$D$是训练数据集，$x$是prompt，$y_{w}$和$y_{l}$分别是好的回答和不好的回答。也就是说要尽可能让好的回答的得分比不好的回答高，拉大他们之间的差别。</p>
 <ol start="2">
 <li><strong>第二步：</strong>用RL算法来提升模型的得分。使用的loss是：</li>
 </ol>
-<p><img src="/2023/12/28/LlmIllusion/ng"></p>
+<p><img src="/2024/03/29/DPO/image2.png"></p>
 <p>以上是模型的训练目标，在希望得到最大的reward的同时，通过KL divergence约束模型使模型不要偏离reference model太远，这里的ref一般就是SFT之后的模型，也就是用强化学习进行微调前的原始模型。</p>
 <h3 id="DPO的损失函数？"><a href="#DPO的损失函数？" class="headerlink" title="DPO的损失函数？"></a>DPO的损失函数？</h3><p>RLHF的损失函数是可以简化的，具体推导过程详见<a target="_blank" rel="noopener" href="https://arxiv.org/pdf/2305.18290">DPO论文</a>的附件，最终DPO的损失函数如下：</p>
-<p><img src="/2023/12/28/LlmIllusion/ng"></p>
+<p><img src="/2024/03/29/DPO/image3.png"></p>
 <p>该目标增加了对偏好数据$y_{w}$的可能性，并减少了非偏好数据$y_{l}$的可能性，并进行评级加权通过$\beta$缩放，进而学到人类偏好（利用了从奖励函数到最优策略的解析映射，允许直接使用人类偏好数据进行简化的优化过程）。</p>
 <p>为了从原理上理解 DPO，分析损失函数的梯度$𝐿_{𝐷𝑃𝑂}$。 相对于参数 θ 的梯度可以写为：</p>
-<p><img src="/2023/12/28/LlmIllusion/ng"></p>
+<p><img src="/2024/03/29/DPO/image4.png"></p>
 <p>其中$\hat{r}<em>{\theta}(x, y)&#x3D;\beta \log \frac{\pi</em>{\theta}(y \mid x)}{\pi_{\mathrm{ref}}(y \mid x)}$是由语言模型$𝜋<em>𝜃$和参考模型$𝜋</em>{𝑟𝑒𝑓}$隐式定义的奖励函数。直观上，损失函数 $𝐿_{𝐷𝑃𝑂}$的梯度增加了偏好$𝑦<em>𝑤$ 的可能性，并降低了非偏好$𝑦_l$的可能性。更重要的是，样例的权重是通过: $\hat{r}</em>{\theta}$对非偏好的评分高多少来衡量的，即$\hat{r}<em>{\theta}(x,y_l)-\hat{r}</em>{\theta}(x,y_w)$，按 $β $进行缩放，即策略模型错误的程度。</p>
 <p><strong>DPO通过以上loss把RLHF无损的转化为了SFT</strong>，在训练的时候不再需要同时跑4个模型（reward model, ref model, critic, actor），而是只用跑actor和ref 2个模型，甚至由于不再在线采样数据，ref model的输出可以预先存下来，在训练的时候重复利用。</p>
 <h1 id="三、DPO的微调过程？"><a href="#三、DPO的微调过程？" class="headerlink" title="三、DPO的微调过程？"></a>三、DPO的微调过程？</h1><ol>

@@ -8,29 +8,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
     <meta name="description" content="一、结论OpenAI o1的核心特点：具有自我反思与错误修正的能力。  可能的训练数据：&lt;问题，思考过程（包括思考过程中出现的错误及错误修正过程），答案&gt;，关键点是思考过程要求包含解决方案的捷径，还包括试错、反思和回溯的完整探索过程。数据构建方法： 人类标注：由人类全面地记录真实解决推理任务的过程。见1.3.6节 多智能方法：一个智能体作为策略模型，进行推理，另一个智能体作为评论模型，">
 <meta property="og:type" content="article">
-<meta property="og:title" content="OpenaiO1调研">
+<meta property="og:title" content="OpenaiO1调研-复现方案调研">
 <meta property="og:url" content="http://example.com/2024/10/25/OpenaiO1/index.html">
 <meta property="og:site_name" content="Macvh@小屋">
 <meta property="og:description" content="一、结论OpenAI o1的核心特点：具有自我反思与错误修正的能力。  可能的训练数据：&lt;问题，思考过程（包括思考过程中出现的错误及错误修正过程），答案&gt;，关键点是思考过程要求包含解决方案的捷径，还包括试错、反思和回溯的完整探索过程。数据构建方法： 人类标注：由人类全面地记录真实解决推理任务的过程。见1.3.6节 多智能方法：一个智能体作为策略模型，进行推理，另一个智能体作为评论模型，">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://example.com/2023/12/28/LlmIllusion/ge.png">
-<meta property="og:image" content="http://example.com/2023/12/28/LlmIllusion/ge1.png">
-<meta property="og:image" content="http://example.com/2023/12/28/LlmIllusion/ge2.png">
-<meta property="og:image" content="http://example.com/2023/12/28/LlmIllusion/ge3.png">
-<meta property="og:image" content="http://example.com/2023/12/28/LlmIllusion/ge4.png">
-<meta property="og:image" content="http://example.com/2023/12/28/LlmIllusion/ge5.png">
-<meta property="og:image" content="http://example.com/2023/12/28/LlmIllusion/ge6.png">
-<meta property="og:image" content="http://example.com/2023/12/28/LlmIllusion/ge7.png">
-<meta property="og:image" content="http://example.com/2023/12/28/LlmIllusion/ge8.png">
-<meta property="og:image" content="http://example.com/2023/12/28/LlmIllusion/ge9.png">
-<meta property="og:image" content="http://example.com/2023/12/28/LlmIllusion/ge10.png">
-<meta property="og:image" content="http://example.com/2023/12/28/LlmIllusion/ge11.png">
+<meta property="og:image" content="http://example.com/2024/10/25/OpenaiO1/image.png">
+<meta property="og:image" content="http://example.com/2024/10/25/OpenaiO1/image1.png">
+<meta property="og:image" content="http://example.com/2024/10/25/OpenaiO1/image2.png">
+<meta property="og:image" content="http://example.com/2024/10/25/OpenaiO1/image3.png">
+<meta property="og:image" content="http://example.com/2024/10/25/OpenaiO1/image4.png">
+<meta property="og:image" content="http://example.com/2024/10/25/OpenaiO1/image5.png">
+<meta property="og:image" content="http://example.com/2024/10/25/OpenaiO1/image6.png">
+<meta property="og:image" content="http://example.com/2024/10/25/OpenaiO1/image7.png">
+<meta property="og:image" content="http://example.com/2024/10/25/OpenaiO1/image8.png">
+<meta property="og:image" content="http://example.com/2024/10/25/OpenaiO1/image9.png">
+<meta property="og:image" content="http://example.com/2024/10/25/OpenaiO1/image10.png">
+<meta property="og:image" content="http://example.com/2024/10/25/OpenaiO1/image11.png">
 <meta property="article:published_time" content="2024-10-25T08:58:50.000Z">
-<meta property="article:modified_time" content="2024-10-25T09:04:05.079Z">
+<meta property="article:modified_time" content="2024-11-24T09:05:37.186Z">
 <meta property="article:author" content="Macvh">
 <meta property="article:tag" content="大模型">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/2023/12/28/LlmIllusion/ge.png">
+<meta name="twitter:image" content="http://example.com/2024/10/25/OpenaiO1/image.png">
     
     
       
@@ -50,7 +50,7 @@
       
     
     <!-- title -->
-    <title>OpenaiO1调研</title>
+    <title>OpenaiO1调研-复现方案调研</title>
     <!-- async scripts -->
     <!-- Google Analytics -->
 
@@ -105,6 +105,8 @@
     <span id="actions">
       <ul>
         
+        <li><a class="icon" aria-label="Previous post" href="/2024/10/29/OpenaiO1-Detail/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
         
         <li><a class="icon" aria-label="Next post" href="/2024/09/30/Dialogue/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
         
@@ -120,16 +122,16 @@
     <div id="share" style="display: none">
       <ul>
   <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2024/10/25/OpenaiO1/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2024/10/25/OpenaiO1/&text=OpenaiO1调研"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2024/10/25/OpenaiO1/&title=OpenaiO1调研"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2024/10/25/OpenaiO1/&is_video=false&description=OpenaiO1调研"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=OpenaiO1调研&body=Check out this article: http://example.com/2024/10/25/OpenaiO1/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2024/10/25/OpenaiO1/&title=OpenaiO1调研"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2024/10/25/OpenaiO1/&title=OpenaiO1调研"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2024/10/25/OpenaiO1/&title=OpenaiO1调研"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2024/10/25/OpenaiO1/&title=OpenaiO1调研"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2024/10/25/OpenaiO1/&name=OpenaiO1调研&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2024/10/25/OpenaiO1/&t=OpenaiO1调研"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2024/10/25/OpenaiO1/&text=OpenaiO1调研-复现方案调研"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2024/10/25/OpenaiO1/&title=OpenaiO1调研-复现方案调研"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2024/10/25/OpenaiO1/&is_video=false&description=OpenaiO1调研-复现方案调研"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=OpenaiO1调研-复现方案调研&body=Check out this article: http://example.com/2024/10/25/OpenaiO1/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2024/10/25/OpenaiO1/&title=OpenaiO1调研-复现方案调研"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2024/10/25/OpenaiO1/&title=OpenaiO1调研-复现方案调研"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2024/10/25/OpenaiO1/&title=OpenaiO1调研-复现方案调研"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2024/10/25/OpenaiO1/&title=OpenaiO1调研-复现方案调研"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2024/10/25/OpenaiO1/&name=OpenaiO1调研-复现方案调研&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2024/10/25/OpenaiO1/&t=OpenaiO1调研-复现方案调研"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
@@ -149,7 +151,7 @@
   <header>
     
     <h1 class="posttitle p-name" itemprop="name headline">
-        OpenaiO1调研
+        OpenaiO1调研-复现方案调研
     </h1>
 
 
@@ -215,7 +217,7 @@
 <li>随着难度的增加，<strong>响应长度（包括标记数和行数）倾向于成比例增长。这表明更高难度的任务涉及更多的推理步骤。</strong></li>
 <li>像“考虑”、“如果”和“可能”这类词在更复杂的问题中出现频繁，<strong>表明模型在探索多条解决路径</strong>。像“等待”和“或者”这样的关键词则<strong>表明模型具备反思和自我纠正的能力</strong>，显示出更深层次的非线性推理过程。</li>
 </ol>
-<p><img src="/2023/12/28/LlmIllusion/ge.png"></p>
+<p><img src="/2024/10/25/OpenaiO1/image.png"></p>
 <p><strong>表1:OpenAI O1 不同领域思维过程中各种实例的统计摘要</strong></p>
 <p>同时仔细审查了OpenAI的O1在解决数学问题时所采用的推理过程。通过他们的详细检查，提取了反映O1如何处理和推理复杂方程的底层思维链。这个结构化的思维图如图5所示，O1的思考有以下特点：</p>
 <ol>
@@ -226,7 +228,7 @@
 <li><strong>结论和验证：</strong>最后，模型解决方程并验证结果，强调了在完成之前验证结论的重要性。</li>
 </ol>
 <p><strong>核心是O1具有自我反思与错误修正的能力。</strong></p>
-<p><img src="/2023/12/28/LlmIllusion/ge1.png"></p>
+<p><img src="/2024/10/25/OpenaiO1/image1.png"></p>
 <p><strong>图1: OpenAI O1 在数学推理中的思维结构。</strong></p>
 <h2 id="1-2-为何O1的这种长思考方式会有效？"><a href="#1-2-为何O1的这种长思考方式会有效？" class="headerlink" title="1.2 为何O1的这种长思考方式会有效？"></a>1.2 为何O1的这种长思考方式会有效？</h2><h3 id="1-2-1-捷径学习与旅程学习"><a href="#1-2-1-捷径学习与旅程学习" class="headerlink" title="1.2.1 捷径学习与旅程学习"></a>1.2.1 捷径学习与旅程学习</h3><p><strong>捷径学习关键特征定义：</strong></p>
 <ol>
@@ -236,7 +238,7 @@
 <li>缺乏自我纠正：这些系统通常缺乏识别和纠正自身错误的能力。尽管捷径学习在人工智能领域推动了许多进步，但它难以产生真正智能且可靠的AI系统，能够处理现实世界挑战的复杂性。</li>
 </ol>
 <p><strong>旅程学习：</strong>“旅程学习”鼓励模型不仅学习解决方案的捷径，还包括试错、反思和回溯的完整探索过程。该方法通过模拟人类的认知过程，使AI系统能够持续学习、反思、回溯和调整，从而有希望使得模型表现出更高的智能水平。</p>
-<p><img src="/2023/12/28/LlmIllusion/ge2.png"></p>
+<p><img src="/2024/10/25/OpenaiO1/image2.png"></p>
 <p><strong>图5:旅程学习范式及其表现</strong></p>
 <h3 id="1-2-2-长思维起效原因"><a href="#1-2-2-长思维起效原因" class="headerlink" title="1.2.2 长思维起效原因"></a><strong>1.2.2 长思维起效原因</strong></h3><p>O1的长思考方法的显著成功可以归因于旅程学习。与传统的捷径学习不同，旅程学习允许<strong>模型探索整个决策轨迹</strong>，模仿人类的问题解决过程。这种全面的探索使O1能够考虑多种解决方案路径，<strong>从错误中学习，并理解完整的解决问题过程</strong>。通过体验正确和错误的路径，模型发展出强大的错误处理和自我修正能力，增强了其适应新挑战的能力。<strong>这种方法培养了对问题领域的深入理解，不仅仅是知道正确答案，而是理解为什么以及如何得出答案</strong>。学习旅程过程紧密模拟人类认知过程，包括试错、反思和调整。这导致了可解释性的增强，因为O1可以提供详细的解决方案步骤并解释其推理过程，包括它如何从错误中恢复过来。因此，O1的长思考过程，基于学习旅程，不仅仅是关于扩展的计算时间，而是代表了彻底的、类人的推理探索。这种方法论使O1能够处理更复杂的问题，提供更可靠和可解释的答案，并在面对新挑战时展示更大的适应性，从而解释其在各种任务中的卓越表现。</p>
 <ol>
@@ -252,9 +254,9 @@
 </ul>
 <h3 id="1-3-2-奖励模型如何构建"><a href="#1-3-2-奖励模型如何构建" class="headerlink" title="1.3.2 奖励模型如何构建"></a>1.3.2 奖励模型如何构建</h3><p>使用奖励模型的第一步是定义粒度。团队的目标不仅仅是关注最终结果，而是专门提高 LLMs 在反思、回溯和相关认知过程方面的能力。因此，需要将评估粒度定义在步骤层面。具体来说，团队使用来自 Abel 的微调数据，通过行号使解决方案变得清晰可辨。微调数据长这样：</p>
 <p>Abel输出demo：</p>
-<p><img src="/2023/12/28/LlmIllusion/ge3.png"></p>
+<p><img src="/2024/10/25/OpenaiO1/image3.png"></p>
 <p>实现奖励模型的过程可以使用开源模型或是调用闭源模型的 api。团队比较了不同奖励模型在 PRM800K 和 MR-GSM8K 子集上的元评估表现。如下表格展示了结果，其中，o1-mini 在不同数据集上表现最佳，证明其是一个良好的奖励模型。</p>
-<p><img src="/2023/12/28/LlmIllusion/ge4.png"></p>
+<p><img src="/2024/10/25/OpenaiO1/image4.png"></p>
 <h3 id="1-3-3-如何构建推理树？"><a href="#1-3-3-如何构建推理树？" class="headerlink" title="1.3.3 如何构建推理树？"></a>1.3.3 <strong>如何构建推理树？</strong></h3><p>构建推理树需要一个能够执行单步推理的策略模型。给定一个问题及其相应的最终答案，策略模型从问题作为根节点开始，不断向树中添加新节点。它首先生成 w 个可能的第一步推理步骤作为根节点的子节点。然后，它迭代地进行前向推理，为每个当前节点（如第一步推理）生成 w 个可能的后续推理步骤作为该节点的子节点。这个过程重复进行，直到达到预设的最大深度或所有叶节点达到最终答案。</p>
 <ol>
 <li><strong>策略模型和步骤分段</strong> 构建推理树需要清晰定义推理步骤。为此，团队采用 Abel 提出的数据格式，将数学问题解决方案转化为具有清晰步骤的形式，将答案分成多行，每行以行号开始，并包含该行内的推理。因此，使用 Abel 数据集对 DeepSeekMath-7B-Base 进行微调，得到 Abel-DSMath，作为策略模型。在这种特定格式数据上微调的模型可以方便地控制单个推理步骤的生成。</li>
@@ -293,12 +295,12 @@
 <li><strong>探索者视角</strong>：与直接呈现答案不同，大语言模型被鼓励以探索的语气进行推理，即假设自己是第一次思考这个问题。这种方式可以激发某种程度的 “好奇心”，鼓励模型批判性思考，使他们感觉自己是学习过程的一部分，而不是简单地接收信息。</li>
 </ul>
 <h2 id="1-4-长思维能力可能的获得方式-2"><a href="#1-4-长思维能力可能的获得方式-2" class="headerlink" title="1.4 长思维能力可能的获得方式-2"></a>1.4 长思维能力可能的获得方式-2</h2><p>基础“&lt;问题，思考过程（包括思考过程中出现的错误及错误修正过程），答案&gt;”数据的构建方式与1.3节阐述基本一致，主要区别为训练部分，重点分析RL模块，从RL的关键要素：状态空间（State Space）、行为空间（Action Space）、奖励模型（Reward Model）叙述</p>
-<h3 id="1-4-1-状态空间"><a href="#1-4-1-状态空间" class="headerlink" title="1.4.1 状态空间"></a>1.4.1 状态空间</h3><p><img src="/2023/12/28/LlmIllusion/ge5.png"></p>
+<h3 id="1-4-1-状态空间"><a href="#1-4-1-状态空间" class="headerlink" title="1.4.1 状态空间"></a>1.4.1 状态空间</h3><p><img src="/2024/10/25/OpenaiO1/image5.png"></p>
 <p>o1的状态空间可能是由Token序列组成的连续状态空间。O1的状态空间和图像是类似的（参考上图），可以把一个Token片段类比RL打游戏对应的某个图片输入，看成由Token序列组成的连续状态空间，经过o1的LLM+RL神经网络映射到某个行为空间中的行为。</p>
-<h3 id="1-4-2-行为空间"><a href="#1-4-2-行为空间" class="headerlink" title="1.4.2 行为空间"></a>1.4.2 行为空间</h3><p><img src="/2023/12/28/LlmIllusion/ge6.png"></p>
+<h3 id="1-4-2-行为空间"><a href="#1-4-2-行为空间" class="headerlink" title="1.4.2 行为空间"></a>1.4.2 行为空间</h3><p><img src="/2024/10/25/OpenaiO1/image6.png"></p>
 <p>根据推测一个合理的方法是归纳出人类思考复杂问题的隐含的“思考因子”,以此作为候选的行为集合，比如：“拆解问题”、“复述目标”、“检查结果”、“修正错误”、“提出假设”等等，总体数量应该不会太多，即使划分得细致一些的话，估计也就几十到上百种。而针对每个具体的“思考因子”，可以产生符合对应分布概率的Token片段，比如行为若是“提出假设”因子，则生成“Alternatively”这个Token的概率就比较大（通过PPO从训练数据里学到的）。那么，Hidden COT片段很可能其真实面貌是长这样的：</p>
-<p><img src="/2023/12/28/LlmIllusion/ge7.png"></p>
-<h3 id="1-4-3-奖励模型"><a href="#1-4-3-奖励模型" class="headerlink" title="1.4.3 奖励模型"></a>1.4.3 奖励模型</h3><p><img src="/2023/12/28/LlmIllusion/ge8.png"></p>
+<p><img src="/2024/10/25/OpenaiO1/image7.png"></p>
+<h3 id="1-4-3-奖励模型"><a href="#1-4-3-奖励模型" class="headerlink" title="1.4.3 奖励模型"></a>1.4.3 奖励模型</h3><p><img src="/2024/10/25/OpenaiO1/image8.png"></p>
 <p>常用奖励模型有两种：结果奖励模型（ORM，Output Reward Model）和过程奖励模型（PRM，Process Reward Model ）。</p>
 <ul>
 <li><strong>ORM（结果奖励模型）</strong>：该模型侧重于对最终结果的评估，而忽略中间推导过程的细节。以Hidden COT为例，仅当o1完整且准确地完成Hidden COT时，ORM才会输出奖励信号。模型答案与标准答案一致，则奖励1分；若答案错误，则扣除1分。这种机制的显著优势在于反馈信号的准确性，特别适用于数学题等具有明确对错标准的任务，从而确保反馈的精准无误。然而，其缺点在于反馈的稀疏性，即无论中间推导过程有多复杂，模型都只能获得一个最终的反馈信号，这在一定程度上限制了模型对错误定位与纠正的能力。</li>
@@ -306,7 +308,7 @@
 </ul>
 <p>通过上述优化表达，我们更加清晰地阐述了ORM和PRM两种模型的特点、优势以及面临的挑战，为相关领域的研究人员提供了更为详尽的参考信息。</p>
 <p>而PRM的训练数据构建有许多方法、细节，如1.3节奖励模型构建方法等，这边不再赘述。</p>
-<h3 id="1-4-4-设想的模型结构"><a href="#1-4-4-设想的模型结构" class="headerlink" title="1.4.4 设想的模型结构"></a>1.4.4 设想的模型结构</h3><p><img src="/2023/12/28/LlmIllusion/ge9.png"></p>
+<h3 id="1-4-4-设想的模型结构"><a href="#1-4-4-设想的模型结构" class="headerlink" title="1.4.4 设想的模型结构"></a>1.4.4 设想的模型结构</h3><p><img src="/2024/10/25/OpenaiO1/image9.png"></p>
 <p>根据前文的分析，o1的模型架构可能如上图，该结构以Transformer为基础的LLM模型（可选用Dense或MOE配置，其中mini版本推荐Dense结构）为核心。在此框架内，模型接收“问题+已生成的部分Hidden COT”（即当前的连续Token序列状态）作为输入，并通过GPT网络对当前状态进行编码。</p>
 <p>在LLM的输出Head部分，有两个子结构：</p>
 <ol>
@@ -316,7 +318,7 @@
 <p>具体来说，采用FFN网络结构，它一方面输出<strong>策略网络P</strong>的结果，代表在当前状态下，下一步“思考因子”Action的分布概率。某个“思考因子”的概率越高，意味着下一步这个Action被选择执行的可能性越大；另一方面，该网络还会输出<strong>价值网络V</strong>的结果，这代表了当前状态通向最终正确答案的概率大小。概率越大，说明当前状态的质量越高，也即目前已输出的这部分Hidden COT的整体质量较好。</p>
 <p>然而，当Hidden COT处于某个特定状态时，尽管能够通过网络知晓下一步应采取的动作，以及当前状态通向成功答案的概率，但仍需解决一个问题：即在已知下一步“思考因子”行为后，如何生成与之对应的Hidden COT的一系列Tokens。可以利用LLM head之上的LLM部分来持续输出后续的Tokens。在有人工数据进行训练的情况下，可以通过PPO算法来增加对应Token的输出概率。值得注意的是，在输出这些后续Token的过程中，并不考虑RL的输出结果，而是直到LLM输出完毕后，再去判断RL的输出以选择下一步的动作。通过这一过程，结合LLM和RL的输出，Hidden COT的模型就能够顺利运转起来。</p>
 <p>此外，根据前文的分析，o1有很大可能性会使用过程奖励模型PRM，并且它可能由多个模型共同构成。基于这两个约束条件，可以对上述模型结构进行了进一步的改进：在已知下一步的“思考因子”后，不再使用主模型来生成后续的Tokens。为了提高后续生成的COT的质量，采用了Best-of-N Sampling的思路，<strong>即通过多个复制的Reverse-o1模型（这些副本可以设置不同的温度参数，以增加输出的多样性）来各自给出一个Token序列。</strong>然后，利用离线训练好的PRM作为评委对这些序列进行打分，并选择得分最高的Token序列作为本次“思考因子”后续的输出Tokens。在选出最佳内容后，可以将其同步给主模型，主模型通过执行类似Prefill的操作来同步输出这一最佳内容，并开始下一轮的输出。通过这种方式，可以显著提升生成的Token序列的质量。</p>
-<h3 id="1-4-5-蒙特卡洛树MCST树搜索"><a href="#1-4-5-蒙特卡洛树MCST树搜索" class="headerlink" title="1.4.5 蒙特卡洛树MCST树搜索"></a>1.4.5 蒙特卡洛树MCST树搜索</h3><p><img src="/2023/12/28/LlmIllusion/ge10.png"></p>
+<h3 id="1-4-5-蒙特卡洛树MCST树搜索"><a href="#1-4-5-蒙特卡洛树MCST树搜索" class="headerlink" title="1.4.5 蒙特卡洛树MCST树搜索"></a>1.4.5 蒙特卡洛树MCST树搜索</h3><p><img src="/2024/10/25/OpenaiO1/image10.png"></p>
 <ol>
 <li><strong>问题输入与MCST树初始化</strong><ul>
 <li>用户输入问题后，模型启动MCST（主体结构）进行问题的解答流程。</li>
@@ -359,7 +361,7 @@
 </ul>
 </li>
 </ol>
-<h2 id="1-5-长思维能力可能的获得方式-3"><a href="#1-5-长思维能力可能的获得方式-3" class="headerlink" title="1.5 长思维能力可能的获得方式-3"></a>1.5 长思维能力可能的获得方式-3</h2><p><img src="/2023/12/28/LlmIllusion/ge11.png"></p>
+<h2 id="1-5-长思维能力可能的获得方式-3"><a href="#1-5-长思维能力可能的获得方式-3" class="headerlink" title="1.5 长思维能力可能的获得方式-3"></a>1.5 长思维能力可能的获得方式-3</h2><p><img src="/2024/10/25/OpenaiO1/image11.png"></p>
 <p>核心为Self-play的方式产出推理数据，使用Generator-Verifier自博弈的方式Scaling到更强的性能，整体可能的实现方式如下：</p>
 <ol>
 <li><strong>模型系统架构</strong><ul>
@@ -440,16 +442,16 @@
     <div id="share-footer" style="display: none">
       <ul>
   <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2024/10/25/OpenaiO1/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2024/10/25/OpenaiO1/&text=OpenaiO1调研"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2024/10/25/OpenaiO1/&title=OpenaiO1调研"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2024/10/25/OpenaiO1/&is_video=false&description=OpenaiO1调研"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=OpenaiO1调研&body=Check out this article: http://example.com/2024/10/25/OpenaiO1/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2024/10/25/OpenaiO1/&title=OpenaiO1调研"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2024/10/25/OpenaiO1/&title=OpenaiO1调研"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2024/10/25/OpenaiO1/&title=OpenaiO1调研"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2024/10/25/OpenaiO1/&title=OpenaiO1调研"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2024/10/25/OpenaiO1/&name=OpenaiO1调研&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2024/10/25/OpenaiO1/&t=OpenaiO1调研"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2024/10/25/OpenaiO1/&text=OpenaiO1调研-复现方案调研"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2024/10/25/OpenaiO1/&title=OpenaiO1调研-复现方案调研"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2024/10/25/OpenaiO1/&is_video=false&description=OpenaiO1调研-复现方案调研"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=OpenaiO1调研-复现方案调研&body=Check out this article: http://example.com/2024/10/25/OpenaiO1/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2024/10/25/OpenaiO1/&title=OpenaiO1调研-复现方案调研"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2024/10/25/OpenaiO1/&title=OpenaiO1调研-复现方案调研"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2024/10/25/OpenaiO1/&title=OpenaiO1调研-复现方案调研"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2024/10/25/OpenaiO1/&title=OpenaiO1调研-复现方案调研"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2024/10/25/OpenaiO1/&name=OpenaiO1调研-复现方案调研&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2024/10/25/OpenaiO1/&t=OpenaiO1调研-复现方案调研"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
